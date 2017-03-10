@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grapevine", "Grapevine\Grapevine.csproj", "{C79E6853-F7A0-426F-883C-169651123256}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grapevine.Samples", "Grapevine.Samples\Grapevine.Samples.csproj", "{DC70695F-12EB-4217-AC07-BD9A8A957BA1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grapevine.Tests.Integration", "Grapevine.Tests.Integration\Grapevine.Tests.Integration.csproj", "{90FE15C9-ABF7-4C04-AF44-E4B39FF1CADA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grapevine.Tests.Unit", "Grapevine.Tests.Unit\Grapevine.Tests.Unit.csproj", "{6EBF9557-E76B-40AA-A329-FB638B0DB128}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grapevine.Tests.Sample", "Grapevine.Tests.Sample\Grapevine.Tests.Sample.csproj", "{166FCD84-9699-4B52-9900-7CCE43E9D1FB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C79E6853-F7A0-426F-883C-169651123256}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C79E6853-F7A0-426F-883C-169651123256}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C79E6853-F7A0-426F-883C-169651123256}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C79E6853-F7A0-426F-883C-169651123256}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC70695F-12EB-4217-AC07-BD9A8A957BA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC70695F-12EB-4217-AC07-BD9A8A957BA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC70695F-12EB-4217-AC07-BD9A8A957BA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC70695F-12EB-4217-AC07-BD9A8A957BA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90FE15C9-ABF7-4C04-AF44-E4B39FF1CADA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90FE15C9-ABF7-4C04-AF44-E4B39FF1CADA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90FE15C9-ABF7-4C04-AF44-E4B39FF1CADA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90FE15C9-ABF7-4C04-AF44-E4B39FF1CADA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EBF9557-E76B-40AA-A329-FB638B0DB128}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EBF9557-E76B-40AA-A329-FB638B0DB128}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EBF9557-E76B-40AA-A329-FB638B0DB128}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EBF9557-E76B-40AA-A329-FB638B0DB128}.Release|Any CPU.Build.0 = Release|Any CPU
+		{166FCD84-9699-4B52-9900-7CCE43E9D1FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{166FCD84-9699-4B52-9900-7CCE43E9D1FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{166FCD84-9699-4B52-9900-7CCE43E9D1FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{166FCD84-9699-4B52-9900-7CCE43E9D1FB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

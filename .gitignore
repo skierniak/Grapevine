@@ -24,6 +24,15 @@ bld/
 *.VisualState.xml
 TestResult.xml
 
+#SonarQube
+.sonarqube/
+
+#Build
+.build/
+
+#Cake
+tools/
+
 # Build Results of an ATL Project
 [Dd]ebugPS/
 [Rr]eleasePS/
@@ -90,6 +99,9 @@ _TeamCity*
 # DotCover is a Code Coverage Tool
 *.dotCover
 
+# OpenCover output directory (configured)
+GeneratedReports/
+
 # NCrunch
 *.ncrunch*
 _NCrunch_*
@@ -114,6 +126,7 @@ DocProject/Help/*.hhk
 DocProject/Help/*.hhp
 DocProject/Help/Html2
 DocProject/Help/html
+DocProject/Help/htm
 
 # Click-Once directory
 publish/
@@ -172,3 +185,6 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
+
+# Nuget Packages
+*.nupkg

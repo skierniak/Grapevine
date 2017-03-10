@@ -1,4 +1,3 @@
-Grapevine
-=========
+![](https://raw.githubusercontent.com/sukona/Grapevine/master/img/grapevine.png)
 
-Super-fast, super-flexible and super-awesome .NET Http Server
+> "Grapes In Dark Blue Cloud" Icon courtesy of [aha-soft](http://www.aha-soft.com/free-icons/free-dark-blue-cloud-icons/).
