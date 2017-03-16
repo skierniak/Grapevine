@@ -32,6 +32,7 @@ TestResult.xml
 
 #Cake
 tools/
+code-coverage/
 
 # Build Results of an ATL Project
 [Dd]ebugPS/
