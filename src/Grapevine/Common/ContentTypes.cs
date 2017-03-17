@@ -7,78 +7,59 @@ namespace Grapevine.Common
 {
     public static class ContentTypes
     {
-        private static readonly ConcurrentDictionary<ContentType, string> MetadataValue;
-        private static readonly ConcurrentDictionary<ContentType, bool> MetadataIsText;
-
-        private static readonly ConcurrentDictionary<string, int> ExtensionLookup;
+        private static readonly ConcurrentDictionary<ContentType, ContentTypeMetadata> MetadataCache;
+        private static readonly ConcurrentDictionary<string, int> ExtensionCache;
 
         private static readonly ConcurrentDictionary<string, int> ValueLookup;
         private static readonly ConcurrentDictionary<string, int> ValueCache;
 
         static ContentTypes()
         {
-            MetadataValue = new ConcurrentDictionary<ContentType, string>();
-            MetadataIsText = new ConcurrentDictionary<ContentType, bool>();
-            ExtensionLookup = new ConcurrentDictionary<string, int>();
+            MetadataCache = new ConcurrentDictionary<ContentType, ContentTypeMetadata>();
+            ExtensionCache = new ConcurrentDictionary<string, int>();
 
             ValueLookup = new ConcurrentDictionary<string, int>();
             ValueCache = new ConcurrentDictionary<string, int>();
 
-            foreach (var ctype in Enum.GetValues(typeof(ContentType)).Cast<ContentType>())
+            foreach (var contentType in Enum.GetValues(typeof(ContentType)).Cast<ContentType>())
             {
-                var metadata = GetMetadata(ctype);
-                var key = metadata.Value;
+                var metadata = contentType.GetEnumAttribute<ContentTypeMetadata>();
+                var intval = (int) contentType;
 
-                MetadataValue[ctype] = key;
-                MetadataIsText[ctype] = metadata.IsText;
-
-                if (!ValueLookup.ContainsKey(key)) ValueLookup[key] = (int)ctype;
-                if (!ValueCache.ContainsKey(key)) ValueCache[key] = (int)ctype;
-
-                ExtensionLookup[ctype.ToString()] = (int)ctype;
+                MetadataCache[contentType] = metadata;
+                ExtensionCache[contentType.ToString()] = intval;
+                ValueLookup[metadata.Value] = intval;
             }
-        }
-
-        /// <summary>
-        /// Returns the ContentTypeMetadata for the given content type
-        /// </summary>
-        /// <param name="ct"></param>
-        /// <returns>ContentTypeMetadata</returns>
-        private static ContentTypeMetadata GetMetadata(ContentType ct)
-        {
-            var info = ct.GetType().GetMember(ct.ToString());
-            var attributes = info[0].GetCustomAttributes(typeof(ContentTypeMetadata), false);
-            return attributes.Length > 0 ? attributes[0] as ContentTypeMetadata : new ContentTypeMetadata();
         }
 
         /// <summary>
         /// Returns the mime type and subtype string from the Value property of the ContentTypeMetadata
         /// </summary>
-        /// <param name="ct"></param>
+        /// <param name="contentType"></param>
         /// <returns>string</returns>
-        public static string ToValue(this ContentType ct)
+        public static string Value(this ContentType contentType)
         {
-            return MetadataValue[ct];
+            return MetadataCache[contentType].Value;
         }
 
         /// <summary>
         /// Gets a value that indicates whether this mime type represents plain text
         /// </summary>
-        /// <param name="ct"></param>
+        /// <param name="contentType"></param>
         /// <returns>bool</returns>
-        public static bool IsText(this ContentType ct)
+        public static bool IsText(this ContentType contentType)
         {
-            return MetadataIsText[ct];
+            return MetadataCache[contentType].IsText;
         }
 
         /// <summary>
         /// Gets a value that indicates whether this mime type represents binary data
         /// </summary>
-        /// <param name="ct"></param>
+        /// <param name="contentType"></param>
         /// <returns>bool</returns>
-        public static bool IsBinary(this ContentType ct)
+        public static bool IsBinary(this ContentType contentType)
         {
-            return !MetadataIsText[ct];
+            return MetadataCache[contentType].IsBinary;
         }
 
         /// <summary>
@@ -91,15 +72,14 @@ namespace Grapevine.Common
             if (string.IsNullOrWhiteSpace(contentType)) return 0;
             var contenttype = contentType.Trim();
 
+            if (ValueLookup.ContainsKey(contenttype)) return (ContentType) ValueLookup[contenttype];
             if (ValueCache.ContainsKey(contenttype)) return (ContentType)ValueCache[contenttype];
 
             foreach (var part in contenttype.Split(';', ',').Select(s => s.Trim()))
             {
                 if (!ValueLookup.ContainsKey(part)) continue;
-
-                var ctype = (ContentType)ValueLookup[part];
-                ValueCache[contenttype] = (int)ctype;
-                return ctype;
+                ValueCache[contenttype] = ValueLookup[part];
+                return (ContentType) ValueCache[contenttype];
             }
 
             ValueCache[contenttype] = 0;
@@ -114,7 +94,12 @@ namespace Grapevine.Common
         public static ContentType FromExtension(string filename)
         {
             var ext = Path.GetExtension(filename)?.ToUpper().TrimStart('.');
-            return ext != null && ExtensionLookup.ContainsKey(ext) ? (ContentType)ExtensionLookup[ext] : 0;
+            return ext != null && ExtensionCache.ContainsKey(ext) ? (ContentType)ExtensionCache[ext] : 0;
+        }
+
+        internal static bool IsCached(string contentType)
+        {
+            return ValueCache.ContainsKey(contentType);
         }
     }
 
@@ -2522,9 +2507,6 @@ namespace Grapevine.Common
 
         [ContentTypeMetadata(Value = "application/x-texinfo", IsBinary = true)]
         TEXINFO,
-
-        [ContentTypeMetadata(Value = "text/plain", IsText = true)]
-        TEXT,
 
         [ContentTypeMetadata(Value = "application/thraud+xml", IsText = true)]
         TFI,

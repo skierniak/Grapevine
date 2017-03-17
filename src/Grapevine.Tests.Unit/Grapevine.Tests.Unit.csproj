@@ -66,6 +66,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\ContentTypeFacts.cs" />
+    <Compile Include="Common\EnumExtensionFacts.cs" />
+    <Compile Include="Common\HttpMethodFacts.cs" />
+    <Compile Include="Common\HttpStatusCodeFacts.cs" />
+    <Compile Include="Common\UriSchemeFacts.cs" />
     <Compile Include="Interfaces\HttpContextFacts.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

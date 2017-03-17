@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using Grapevine.Interfaces;
 using Grapevine.Server;
 
 namespace Grapevine.Core

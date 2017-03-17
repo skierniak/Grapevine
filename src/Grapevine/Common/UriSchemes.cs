@@ -6,15 +6,15 @@ namespace Grapevine.Common
 {
     public static class UriSchemes
     {
-        private static readonly ConcurrentDictionary<UriScheme, string> Lookup;
+        private static readonly ConcurrentDictionary<UriScheme, string> Cache;
 
         static UriSchemes()
         {
-            Lookup = new ConcurrentDictionary<UriScheme, string>();
+            Cache = new ConcurrentDictionary<UriScheme, string>();
 
             foreach (var uriScheme in Enum.GetValues(typeof(UriScheme)).Cast<UriScheme>())
             {
-                Lookup[uriScheme] = uriScheme.ToString().ToLower();
+                Cache[uriScheme] = uriScheme.ToString().ToLower();
             }
         }
 
@@ -25,7 +25,7 @@ namespace Grapevine.Common
         /// <returns></returns>
         public static string ToScheme(this UriScheme scheme)
         {
-            return Lookup[scheme];
+            return Cache[scheme];
         }
     }
 

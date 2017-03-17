@@ -1,4 +1,5 @@
 ﻿using System.Collections.Specialized;
+using Grapevine.Common;
 
 namespace Grapevine.Core
 {
@@ -6,9 +7,15 @@ namespace Grapevine.Core
     {
         TRequest Advanced { get; }
 
+        ContentType ContentType { get; }
+
         NameValueCollection Headers { get; }
 
+        HttpMethod HttpMethod { get; }
+
         string PathInfo { get; }
+
+        
     }
 
     public interface IInboundHttpRequest
@@ -35,9 +42,16 @@ namespace Grapevine.Core
         {
             Advanced = request;
 
+            PathInfo = Advanced.RawUrl.Split(new[] { '?' }, 2)[0];
+            ContentType = ContentTypes.FromString(Advanced.ContentType);
+            HttpMethod = HttpMethods.FromString(Advanced.HttpMethod);
         }
 
+        public ContentType ContentType { get; }
+
         public NameValueCollection Headers => Advanced.Headers;
+
+        public HttpMethod HttpMethod { get; }
 
         public string PathInfo { get; }
     }

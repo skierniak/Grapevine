@@ -1,6 +1,5 @@
 ﻿using System;
 using Grapevine.Common;
-using Grapevine.Interfaces;
 
 namespace Grapevine.Exceptions
 {

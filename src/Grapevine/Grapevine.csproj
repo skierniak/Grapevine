@@ -43,18 +43,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\ContentTypes.cs" />
+    <Compile Include="Common\EnumExtensions.cs" />
     <Compile Include="Common\HttpMethods.cs" />
     <Compile Include="Common\HttpStatusCodes.cs" />
     <Compile Include="Common\InternalExtensions.cs" />
     <Compile Include="Common\PatternParser.cs" />
     <Compile Include="Common\UriSchemes.cs" />
+    <Compile Include="Exceptions\InvalidRouteMethodException.cs" />
     <Compile Include="Exceptions\NotFoundException.cs" />
     <Compile Include="Core\IDynamicProperties.cs" />
     <Compile Include="Core\IHttpContext.cs" />
     <Compile Include="Core\IHttpListener.cs" />
     <Compile Include="Core\IHttpRequest.cs" />
     <Compile Include="Core\IHttpResponse.cs" />
-    <Compile Include="Server\IRestServer.cs" />
     <Compile Include="Logging\ConsoleLoggingProvider.cs" />
     <Compile Include="Logging\GrapevineLogger.cs" />
     <Compile Include="Logging\GrapevineLogLevel.cs" />

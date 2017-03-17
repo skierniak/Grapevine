@@ -6,16 +6,16 @@ namespace Grapevine.Common
 {
     public static class HttpMethods
     {
-        private static readonly ConcurrentDictionary<string, int> Lookup;
+        private static readonly ConcurrentDictionary<string, int> Cache;
 
         static HttpMethods()
         {
-            Lookup = new ConcurrentDictionary<string, int>();
+            Cache = new ConcurrentDictionary<string, int>();
 
             foreach (var val in Enum.GetValues(typeof(HttpMethod)).Cast<HttpMethod>())
             {
                 var key = val.ToString();
-                Lookup[key] = (int)val;
+                Cache[key] = (int)val;
             }
         }
 
@@ -37,8 +37,8 @@ namespace Grapevine.Common
         /// <returns></returns>
         public static HttpMethod FromString(string method)
         {
-            var ucMethod = method.ToUpper();
-            return (Lookup.ContainsKey(ucMethod)) ? (HttpMethod)Lookup[ucMethod] : 0;
+            var ucMethod = method?.ToUpper();
+            return ucMethod != null && Cache.ContainsKey(ucMethod) ? (HttpMethod)Cache[ucMethod] : 0;
         }
     }
 

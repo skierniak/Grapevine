@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
-namespace Grapevine.Interfaces
+namespace Grapevine.Core
 {
     public interface IDynamicProperties
     {
