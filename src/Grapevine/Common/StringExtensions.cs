@@ -2,7 +2,7 @@
 
 namespace Grapevine.Common
 {
-    public static class InternalExtensions
+    public static class StringExtensions
     {
         private static readonly Regex CamelCaseInner = new Regex(@"(\P{Ll})(\P{Ll}\p{Ll})", RegexOptions.Singleline | RegexOptions.Compiled);
         private static readonly Regex CamelCaseOuter = new Regex(@"(\p{Ll})(\P{Ll})", RegexOptions.Singleline | RegexOptions.Compiled);

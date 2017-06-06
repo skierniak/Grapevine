@@ -71,6 +71,8 @@
     <Compile Include="Common\HttpMethodFacts.cs" />
     <Compile Include="Common\HttpStatusCodeFacts.cs" />
     <Compile Include="Common\PatternParserFacts.cs" />
+    <Compile Include="Common\StreamExtensionFacts.cs" />
+    <Compile Include="Common\TypeExtensionsFacts.cs" />
     <Compile Include="Common\UriSchemeFacts.cs" />
     <Compile Include="Interfaces\HttpContextFacts.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -83,6 +85,14 @@
       <Project>{C79E6853-F7A0-426F-883C-169651123256}</Project>
       <Name>Grapevine</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="test-get-bytes.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="test-get-bytes.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

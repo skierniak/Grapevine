@@ -46,8 +46,12 @@
     <Compile Include="Common\EnumExtensions.cs" />
     <Compile Include="Common\HttpMethods.cs" />
     <Compile Include="Common\HttpStatusCodes.cs" />
-    <Compile Include="Common\InternalExtensions.cs" />
+    <Compile Include="Common\MethodInfoExtensions.cs" />
+    <Compile Include="Common\ObjectExtensions.cs" />
+    <Compile Include="Common\StreamExtensions.cs" />
+    <Compile Include="Common\StringExtensions.cs" />
     <Compile Include="Common\PatternParser.cs" />
+    <Compile Include="Common\TypeExtensions.cs" />
     <Compile Include="Common\UriSchemes.cs" />
     <Compile Include="Exceptions\InvalidRouteMethodException.cs" />
     <Compile Include="Exceptions\NotFoundException.cs" />
