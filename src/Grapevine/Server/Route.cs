@@ -105,7 +105,7 @@ namespace Grapevine.Server
             PathInfo = (!string.IsNullOrWhiteSpace(pathInfo)) ? pathInfo : string.Empty;
 
             PatternKeys = PatternParser.GeneratePatternKeys(PathInfo);
-            PathInfoPattern = PatternParser.GenerteRegEx(PathInfo);
+            PathInfoPattern = PatternParser.GenerateRegEx(PathInfo);
         }
 
         public bool Matches(HttpContext context)
