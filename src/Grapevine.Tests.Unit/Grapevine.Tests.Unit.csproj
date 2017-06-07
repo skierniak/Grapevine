@@ -70,6 +70,7 @@
     <Compile Include="Common\EnumExtensionFacts.cs" />
     <Compile Include="Common\HttpMethodFacts.cs" />
     <Compile Include="Common\HttpStatusCodeFacts.cs" />
+    <Compile Include="Common\NameValueCollectionExtensionFacts.cs" />
     <Compile Include="Common\PortFinderFacts.cs" />
     <Compile Include="Server\MethodInfoExtensionsFacts.cs" />
     <Compile Include="Common\ObjectExtensionsFacts.cs" />
