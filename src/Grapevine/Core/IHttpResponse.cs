@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Net;
 using Grapevine.Common;
 
 namespace Grapevine.Core
@@ -35,9 +36,9 @@ namespace Grapevine.Core
     /// <summary>
     /// Represents a response to a request being handled by an HttpListener object
     /// </summary>
-    public class OutboundHttpResponse : IOutboundHttpResponse<System.Net.HttpListenerResponse>
+    public class OutboundHttpResponse : IOutboundHttpResponse<HttpListenerResponse>
     {
-        public System.Net.HttpListenerResponse Advanced { get; }
+        public HttpListenerResponse Advanced { get; }
 
         public bool ResponseSent { get; protected internal set; }
 
@@ -88,7 +89,7 @@ namespace Grapevine.Core
 
     public static class OutboundHttpResponseExtensions
     {
-        public static void SendResponse(this IOutboundHttpResponse response, HttpStatusCode statusCode)
+        public static void SendResponse(this IOutboundHttpResponse response, Common.HttpStatusCode statusCode)
         {
             
         }

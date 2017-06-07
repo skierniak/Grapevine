@@ -1,4 +1,5 @@
 ﻿using System.Collections.Specialized;
+using System.Net;
 using Grapevine.Common;
 
 namespace Grapevine.Core
@@ -15,7 +16,7 @@ namespace Grapevine.Core
 
         string PathInfo { get; }
 
-        
+        NameValueCollection QueryString { get; }
     }
 
     public interface IInboundHttpRequest
@@ -34,9 +35,9 @@ namespace Grapevine.Core
     {
     }
 
-    public class InboundHttpRequest : IInboundHttpRequest<System.Net.HttpListenerRequest>
+    public class InboundHttpRequest : IInboundHttpRequest<HttpListenerRequest>
     {
-        public System.Net.HttpListenerRequest Advanced { get; }
+        public HttpListenerRequest Advanced { get; }
 
         public InboundHttpRequest(System.Net.HttpListenerRequest request)
         {
@@ -54,5 +55,7 @@ namespace Grapevine.Core
         public HttpMethod HttpMethod { get; }
 
         public string PathInfo { get; }
+
+        public NameValueCollection QueryString => Advanced.QueryString;
     }
 }
