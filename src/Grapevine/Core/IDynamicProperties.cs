@@ -12,7 +12,7 @@ namespace Grapevine.Core
         IDictionary<string, object> Properties { get; }
     }
 
-    public abstract class DynamicProperties
+    public abstract class DynamicProperties : IDynamicProperties
     {
         private ConcurrentDictionary<string, object> _properties;
 
