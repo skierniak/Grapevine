@@ -46,6 +46,7 @@
     <Compile Include="Common\EnumExtensions.cs" />
     <Compile Include="Common\HttpMethods.cs" />
     <Compile Include="Common\HttpStatusCodes.cs" />
+    <Compile Include="Common\PortFinder.cs" />
     <Compile Include="Server\MethodInfoExtensions.cs" />
     <Compile Include="Common\ObjectExtensions.cs" />
     <Compile Include="Common\StreamExtensions.cs" />

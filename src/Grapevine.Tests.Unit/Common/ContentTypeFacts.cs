@@ -136,6 +136,8 @@ namespace Grapevine.Tests.Unit.Common
                     ContentTypes.IsCached(contenttype).ShouldBeFalse();
                     ContentTypes.FromString(contenttype).Equals(ContentType.HTML).ShouldBeTrue();
                     ContentTypes.IsCached(contenttype).ShouldBeTrue();
+                    ContentTypes.FromString(contenttype).Equals(ContentType.HTML).ShouldBeTrue();
+                    ContentTypes.IsCached(contenttype).ShouldBeTrue();
                 }
 
                 [Fact]
