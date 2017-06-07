@@ -73,6 +73,7 @@
     <Compile Include="Common\NameValueCollectionExtensionFacts.cs" />
     <Compile Include="Common\PortFinderFacts.cs" />
     <Compile Include="Core\DynamicPropertiesFacts.cs" />
+    <Compile Include="Server\ContentFolderFacts.cs" />
     <Compile Include="Server\MethodInfoExtensionsFacts.cs" />
     <Compile Include="Common\ObjectExtensionsFacts.cs" />
     <Compile Include="Common\PatternParserFacts.cs" />
