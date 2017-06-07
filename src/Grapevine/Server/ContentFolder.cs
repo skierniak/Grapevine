@@ -42,7 +42,7 @@ namespace Grapevine.Server
         public static string DefaultIndexFileName { get; } = "index.html";
 
         private FileSystemWatcher _watcher;
-        private string _indexFileName = "index.html";
+        private string _indexFileName = DefaultIndexFileName;
         private string _prefix;
         private string _path;
 
@@ -77,7 +77,7 @@ namespace Grapevine.Server
             get { return _indexFileName; }
             set
             {
-                if (string.IsNullOrEmpty(value) || value == _indexFileName) return;
+                if (string.IsNullOrWhiteSpace(value) || value == _indexFileName) return;
                 _indexFileName = value;
                 PopulateDirectoryList();
             }
@@ -123,7 +123,7 @@ namespace Grapevine.Server
             }
         }
 
-        public IDictionary<string, string> DirectoryListing => DirectoryList as IDictionary<string, string>;
+        public IDictionary<string, string> DirectoryListing => DirectoryList;
 
         public void SendFile(HttpContext context)
         {
