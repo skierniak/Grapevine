@@ -1,10 +1,10 @@
 ﻿using System.Reflection;
-using Grapevine.Common;
+using Grapevine.Server;
 using NSubstitute;
 using Shouldly;
 using Xunit;
 
-namespace Grapevine.Tests.Unit.Common
+namespace Grapevine.Tests.Unit.Server
 {
     public class MethodInfoExtensionsFacts
     {
@@ -12,28 +12,38 @@ namespace Grapevine.Tests.Unit.Common
         {
         }
 
-        public class IsRestRouteEligible
+        public class ConvertToActionHelpers
         {
         }
 
-        public class CanInvoke
+        public class IsRestRouteEligible
+        {
+
+        }
+
+        public class IsRestRouteEligibleHelpers
+        {
+
+        }
+
+        public class CanBeInvoked
         {
             [Fact]
             public void ReturnsTrueWhenMethodIsStatic()
             {
-                typeof(ConcreteClass).GetMethod("StaticMethod").CanInvoke().ShouldBeTrue();
+                typeof(CanBeInvokedHelpers.ConcreteClass).GetMethod("StaticMethod").CanBeInvoked().ShouldBeTrue();
             }
 
             [Fact]
             public void ReturnsTrueWhenMethodIsNotStatic()
             {
-                typeof(ConcreteClass).GetMethod("NonStaticMethod").CanInvoke().ShouldBeTrue();
+                typeof(CanBeInvokedHelpers.ConcreteClass).GetMethod("NonStaticMethod").CanBeInvoked().ShouldBeTrue();
             }
 
             [Fact]
             public void ReturnsFalseWhenMethodIsAbstract()
             {
-                typeof(AbstractClass).GetMethod("AbstractMethod").CanInvoke().ShouldBeFalse();
+                typeof(CanBeInvokedHelpers.AbstractClass).GetMethod("AbstractMethod").CanBeInvoked().ShouldBeFalse();
             }
 
             [Fact]
@@ -41,27 +51,30 @@ namespace Grapevine.Tests.Unit.Common
             {
                 var methodInfo = Substitute.For<MethodInfo>();
                 methodInfo.ReflectedType.ShouldBeNull();
-                methodInfo.CanInvoke().ShouldBeFalse();
+                methodInfo.CanBeInvoked().ShouldBeFalse();
             }
 
             [Fact]
             public void ReturnsFalseWhenReflectedTypeIsInterface()
             {
-                typeof(ISomeInterface).GetMethod("SomeMethod").CanInvoke().ShouldBeFalse();
+                typeof(CanBeInvokedHelpers.ISomeInterface).GetMethod("SomeMethod").CanBeInvoked().ShouldBeFalse();
             }
 
             [Fact]
             public void ReturnsFalseWhenReflectedTypeIsStruct()
             {
-                typeof(SomeStruct).GetMethod("SomeMethod").CanInvoke().ShouldBeFalse();
+                typeof(CanBeInvokedHelpers.SomeStruct).GetMethod("SomeMethod").CanBeInvoked().ShouldBeFalse();
             }
 
             [Fact]
             public void ReturnsFalseWhenReflectedTypeIsAbstract()
             {
-                typeof(AbstractClass).GetMethod("RealMethod").CanInvoke().ShouldBeFalse();
+                typeof(CanBeInvokedHelpers.AbstractClass).GetMethod("RealMethod").CanBeInvoked().ShouldBeFalse();
             }
+        }
 
+        public class CanBeInvokedHelpers
+        {
             public abstract class AbstractClass
             {
                 public abstract void AbstractMethod();

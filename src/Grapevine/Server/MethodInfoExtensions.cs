@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Grapevine.Common;
 using Grapevine.Exceptions;
 
-namespace Grapevine.Common
+namespace Grapevine.Server
 {
     public static class MethodInfoExtensions
     {
@@ -52,7 +53,7 @@ namespace Grapevine.Common
             var exceptions = new List<Exception>();
 
             // Can the method be invoked?
-            if (!method.CanInvoke()) exceptions.Add(new InvalidRouteMethodException($"{method.Name} cannot be invoked"));
+            if (!method.CanBeInvoked()) exceptions.Add(new InvalidRouteMethodException($"{method.Name} cannot be invoked"));
 
             // Does the type have a parameterless constructor?
             if (method.ReflectedType != null && !method.ReflectedType.HasParameterlessConstructor()) exceptions.Add(new InvalidRouteMethodException($"{method.ReflectedType} does not have a parameterless constructor"));
@@ -81,7 +82,7 @@ namespace Grapevine.Common
         /// </summary>
         /// <param name="methodInfo"></param>
         /// <returns></returns>
-        internal static bool CanInvoke(this MethodInfo methodInfo)
+        internal static bool CanBeInvoked(this MethodInfo methodInfo)
         {
             /*
             * The first set of checks are on the method itself:

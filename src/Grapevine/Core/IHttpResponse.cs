@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.IO.Compression;
 using Grapevine.Common;
 
 namespace Grapevine.Core
