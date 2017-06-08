@@ -27,7 +27,7 @@ namespace Grapevine.Tests.Unit.Common
             [Fact]
             public void ReturnsCorrectByteArray()
             {
-                var filestream = new FileStream(Basepath + ".txt", FileMode.Open);
+                var filestream = new FileStream(Basepath + ".txt", FileMode.Open, FileAccess.Read);
                 filestream.GetTextBytes(Encoding.ASCII).SequenceEqual(ExpectedBytes).ShouldBeTrue();
             }
         }

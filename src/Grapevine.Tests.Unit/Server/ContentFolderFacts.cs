@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -319,7 +320,7 @@ namespace Grapevine.Tests.Unit.Server
             {
                 var updated = new ManualResetEvent(false);
 
-                var path = Path.Combine(Directory.GetCurrentDirectory(), GenerateUniqueString());
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "adds-new-files-to-list");
                 Directory.CreateDirectory(path);
 
                 var folder = new ContentFolder(path);
@@ -343,7 +344,7 @@ namespace Grapevine.Tests.Unit.Server
             {
                 var updated = new ManualResetEvent(false);
 
-                var path = Path.Combine(Directory.GetCurrentDirectory(), GenerateUniqueString());
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "removes-deleted-files-from-list");
                 Directory.CreateDirectory(path);
 
                 var filepath = Path.Combine(path, GenerateUniqueString());
@@ -366,7 +367,7 @@ namespace Grapevine.Tests.Unit.Server
             {
                 var updated = new ManualResetEvent(false);
 
-                var path = Path.Combine(Directory.GetCurrentDirectory(), GenerateUniqueString());
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "changes-names-of-renamed-files-in-list");
                 Directory.CreateDirectory(path);
 
                 var filepath = Path.Combine(path, GenerateUniqueString());
@@ -392,7 +393,7 @@ namespace Grapevine.Tests.Unit.Server
             {
                 var updated = new ManualResetEvent(false);
 
-                var path = Path.Combine(Directory.GetCurrentDirectory(), GenerateUniqueString());
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "adds-two-files-to-list-when-adding-default-file-name");
                 Directory.CreateDirectory(path);
 
                 var folder = new ContentFolder(path);
@@ -416,7 +417,7 @@ namespace Grapevine.Tests.Unit.Server
             {
                 var updated = new ManualResetEvent(false);
 
-                var path = Path.Combine(Directory.GetCurrentDirectory(), GenerateUniqueString());
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "removes-two-files-from-list-when-removing-default-file-name");
                 Directory.CreateDirectory(path);
 
                 var filepath = Path.Combine(path, ContentFolder.DefaultIndexFileName);
@@ -442,7 +443,7 @@ namespace Grapevine.Tests.Unit.Server
             {
                 var updated = new ManualResetEvent(false);
 
-                var path = Path.Combine(Directory.GetCurrentDirectory(), GenerateUniqueString());
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "updates-indexer-when-changing-to-default-file-name");
                 Directory.CreateDirectory(path);
 
                 var filepath = Path.Combine(path, GenerateUniqueString());
@@ -469,7 +470,7 @@ namespace Grapevine.Tests.Unit.Server
             {
                 var updated = new ManualResetEvent(false);
 
-                var path = Path.Combine(Directory.GetCurrentDirectory(), GenerateUniqueString());
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "updates-indexer-when-changing-from-default-file-name");
                 Directory.CreateDirectory(path);
 
                 var filepath = Path.Combine(path, ContentFolder.DefaultIndexFileName);
@@ -510,69 +511,42 @@ namespace Grapevine.Tests.Unit.Server
             [Fact]
             public void CallsSendResponseWhenFileExists()
             {
-                //var responded = new ManualResetEvent(false);
-                //var filename = GenerateUniqueString();
-                //var counter = 0;
+                var responded = new ManualResetEvent(false);
+                var filename = GenerateTempFile(_folder);
 
-                //File.WriteAllText(Path.Combine(_folder.FolderPath, filename), "for testing purposes - delete me");
-                //while (_folder.DirectoryListing.Count == 0 && counter < 5)
-                //{
-                //    Thread.Sleep(100);
-                //    counter++;
-                //}
+                var context = MockContext(filename, responded);
 
-                //var context = Substitute.For<HttpContext>();
+                _folder.SendFile(context);
+                responded.WaitOne(300, false);
 
-                //var request = Substitute.For<IInboundHttpRequest<object>>();
-                //request.PathInfo.Returns($"/{filename}");
-
-                //var response = Substitute.For<IOutboundHttpResponse<object>>();
-                //response.When(x => x.SendResponse(Arg.Any<byte[]>())).Do(info =>
-                //{
-                //    context.WasRespondedTo.Returns(true);
-                //    responded.Set();
-                //});
-
-                //context.Request.Returns(request);
-                //context.Response.Returns(response);
-
-                //_folder.SendFile(context);
-                //responded.WaitOne(300, false);
-
-                //context.Response.Received().SendResponse(Arg.Any<byte[]>());
-                //context.WasRespondedTo.ShouldBeTrue();
+                context.Response.Received().SendResponse(Arg.Any<byte[]>());
+                context.WasRespondedTo.ShouldBeTrue();
             }
 
             [Fact]
             public void DoesNotCallSendResponseWhenFileDoesNotExist()
             {
-                //var context = Mocks.HttpContext();
-                //context.Request.PathInfo.Returns($"/{GenerateUniqueString()}");
-                //context.Response.When(x => x.SendResponse(Arg.Any<byte[]>())).Do(info =>
-                //{
-                //    context.WasRespondedTo.Returns(true);
-                //});
+                var responded = new ManualResetEvent(false);
+                var filename = GenerateUniqueString();
 
-                //_folder.SendFile(context);
+                var context = MockContext(filename, responded);
 
-                //context.Response.DidNotReceive().SendResponse(Arg.Any<byte[]>());
-                //context.WasRespondedTo.ShouldBeFalse();
+                _folder.SendFile(context);
+
+                context.Response.DidNotReceive().SendResponse(Arg.Any<byte[]>());
+                context.WasRespondedTo.ShouldBeFalse();
             }
 
             [Fact]
             public void ThrowsExceptionWhenFileShouldExist()
             {
-                //var prefix = GenerateUniqueString();
-                //var context = Mocks.HttpContext();
-                //context.Request.PathInfo.Returns($"/{prefix}/{GenerateUniqueString()}");
-                //context.Response.When(x => x.SendResponse(Arg.Any<byte[]>())).Do(info =>
-                //{
-                //    context.WasRespondedTo.Returns(true);
-                //});
+                var responded = new ManualResetEvent(false);
+                var prefix = GenerateUniqueString();
+                var context = MockContext($"{prefix}/{GenerateUniqueString()}", responded);
 
-                //_folder.Prefix = prefix;
+                _folder.Prefix = prefix;
 
-                //Should.Throw<Exceptions.Server.FileNotFoundException>(() => _folder.SendFile(context));
+                Should.Throw<Exceptions.FileNotFoundException>(() => _folder.SendFile(context));
             }
         }
 
@@ -593,75 +567,78 @@ namespace Grapevine.Tests.Unit.Server
             [Fact]
             public void ReturnsNotModifiedWhenIfModifiedHeaderAndFileHasNotBeenModified()
             {
-                //var responded = new ManualResetEvent(false);
-                //var filename = GenerateUniqueString();
-                //var counter = 0;
-                //HttpStatusCode statusCode = 0;
+                var responded = new ManualResetEvent(false);
+                var filename = GenerateTempFile(_folder);
 
-                //var filepath = Path.Combine(_folder.FolderPath, filename);
-                //File.WriteAllText(filepath, "for testing purposes - delete me");
-                //while (_folder.DirectoryListing.Count == 0 && counter < 5)
-                //{
-                //    Thread.Sleep(100);
-                //    counter++;
-                //}
+                var timestamp = File.GetLastWriteTimeUtc(Path.Combine(_folder.FolderPath, filename)).ToString("R");
+                var context = MockContext(filename, responded);
+                context.Request.Headers.Add("If-Modified-Since", timestamp);
 
-                //var context =
-                //    Mocks.HttpContext(new Dictionary<string, object>
-                //    {
-                //        {
-                //            "RequestHeaders",
-                //            new WebHeaderCollection
-                //            {
-                //                {"If-Modified-Since", File.GetLastWriteTimeUtc(filepath).ToString("R")}
-                //            }
-                //        }
-                //    });
+                _folder.SendFile(context);
+                responded.WaitOne(300, false);
 
-                //context.Request.PathInfo.Returns($"/{filename}");
-                //context.Response.When(x => x.SendResponse(Arg.Any<byte[]>())).Do(info =>
-                //{
-                //    statusCode = context.Response.StatusCode;
-                //    context.WasRespondedTo.Returns(true);
-                //    responded.Set();
-                //});
-
-                //_folder.SendFile(context);
-                //responded.WaitOne(300, false);
-
-                //context.WasRespondedTo.ShouldBeTrue();
-                //statusCode.ShouldBe(HttpStatusCode.NotModified);
+                context.WasRespondedTo.ShouldBeTrue();
+                context.Response.StatusCode.ShouldBe(HttpStatusCode.NotModified);
             }
 
             [Fact]
             public void ReturnsFileWhenIfModifiedHeaderAndFileHasBeenModified()
             {
-                //var responded = new ManualResetEvent(false);
-                //var filename = GenerateUniqueString();
-                //var counter = 0;
+                var responded = new ManualResetEvent(false);
+                var filename = GenerateTempFile(_folder);
 
-                //File.WriteAllText(Path.Combine(_folder.FolderPath, filename), "for testing purposes - delete me");
-                //while (_folder.DirectoryListing.Count == 0 && counter < 5)
-                //{
-                //    Thread.Sleep(100);
-                //    counter++;
-                //}
+                var timestamp = DateTime.Now.AddDays(-1).ToString("R");
+                var context = MockContext(filename, responded);
+                context.Request.Headers.Add("If-Modified-Since", timestamp);
 
-                //var context = Mocks.HttpContext();
-                //context.Request.PathInfo.Returns($"/{filename}");
-                //context.Request.Headers.Add("If-Modified-Since", DateTime.Now.AddDays(-1).ToString("R"));
-                //context.Response.When(x => x.SendResponse(Arg.Any<byte[]>())).Do(info =>
-                //{
-                //    context.WasRespondedTo.Returns(true);
-                //    responded.Set();
-                //});
+                _folder.SendFile(context);
+                responded.WaitOne(300, false);
 
-                //_folder.SendFile(context);
-                //responded.WaitOne(300, false);
-
-                //context.WasRespondedTo.ShouldBeTrue();
-                //context.Response.StatusCode.ShouldNotBe(HttpStatusCode.NotModified);
+                context.WasRespondedTo.ShouldBeTrue();
+                context.Response.StatusCode.ShouldNotBe(HttpStatusCode.NotModified);
             }
+        }
+
+        private static string GenerateTempFile(ContentFolder folder)
+        {
+            var filename = GenerateUniqueString();
+            var counter = 0;
+
+            File.WriteAllText(Path.Combine(folder.FolderPath, filename), "for testing purposes - delete me");
+            while (folder.DirectoryListing.Count == 0 && counter < 5)
+            {
+                Thread.Sleep(100);
+                counter++;
+            }
+
+            return filename;
+        }
+
+        private static IHttpContext MockContext(string filename, ManualResetEvent responded)
+        {
+            var context = Substitute.For<IHttpContext>();
+
+            var request = Substitute.For<IHttpRequest>();
+            request.PathInfo.Returns($"/{filename}");
+            request.Headers.Returns(new NameValueCollection());
+
+            var response = Substitute.For<IHttpResponse>();
+            response.Headers.Returns(new NameValueCollection());
+            response.When(x => x.SendResponse(Arg.Any<byte[]>())).Do(info =>
+            {
+                context.WasRespondedTo.Returns(true);
+                responded.Set();
+            });
+
+            context.Request.Returns(request);
+            context.Response.Returns(response);
+
+            context.Response.When(x => x.SendResponse(Arg.Any<byte[]>())).Do(info =>
+            {
+                response.StatusCode = context.Response.StatusCode;
+            });
+
+            return context;
         }
     }
 
@@ -681,6 +658,11 @@ namespace Grapevine.Tests.Unit.Server
                 foreach (var file in Directory.GetFiles(folder.FolderPath))
                 {
                     File.Delete(file);
+                }
+
+                while (Directory.GetFiles(folder.FolderPath).Length > 0)
+                {
+                    Thread.Sleep(100);
                 }
 
                 Directory.Delete(folder.FolderPath);

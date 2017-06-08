@@ -9,7 +9,7 @@ using FileNotFoundException = Grapevine.Exceptions.FileNotFoundException;
 
 namespace Grapevine.Server
 {
-    public interface IContentFolder<in TContext> : IDisposable
+    public interface IContentFolder : IDisposable
     {
         /// <summary>
         /// Gets or sets the default file to return when a directory is requested
@@ -31,10 +31,10 @@ namespace Grapevine.Server
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        void SendFile(TContext context);
+        void SendFile(IHttpContext context);
     }
 
-    public class ContentFolder : IContentFolder<HttpContext>
+    public class ContentFolder : IContentFolder
     {
         protected ConcurrentDictionary<string, string> DirectoryList { get; set; }
 
@@ -125,7 +125,7 @@ namespace Grapevine.Server
 
         public IDictionary<string, string> DirectoryListing => DirectoryList;
 
-        public void SendFile(HttpContext context)
+        public void SendFile(IHttpContext context)
         {
             if (DirectoryList.ContainsKey(context.Request.PathInfo))
             {
@@ -143,10 +143,11 @@ namespace Grapevine.Server
                     }
                 }
 
-                context.Response.SendResponse(new FileStream(filepath, FileMode.Open));
+                context.Response.ContentType = ContentTypes.FromExtension(filepath);
+                context.Response.SendResponse(File.ReadAllBytes(filepath));
             }
 
-            if (!string.IsNullOrEmpty(Prefix) && context.Request.PathInfo.StartsWith(Prefix) && !context.WasRespondedTo)
+            if (!string.IsNullOrWhiteSpace(Prefix) && context.Request.PathInfo.StartsWith(Prefix) && !context.WasRespondedTo)
             {
                 throw new FileNotFoundException(context.Request.PathInfo);
             }

@@ -10,9 +10,9 @@ namespace Grapevine.Tests.Unit.Interfaces
         [Fact]
         public void CanCreateMock()
         {
-            var request = Substitute.For<IHttpRequest<object>>();
-            var response = Substitute.For<IHttpResponse<object>>();
-            var context = Substitute.For<IHttpContext<object, object, object>>();
+            var request = Substitute.For<IHttpRequest>();
+            var response = Substitute.For<IHttpResponse>();
+            var context = Substitute.For<IHttpContext>();
 
             context.ShouldNotBeNull();
             request.ShouldNotBeNull();

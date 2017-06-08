@@ -4,10 +4,8 @@ using Grapevine.Common;
 
 namespace Grapevine.Core
 {
-    public interface IHttpRequest<out TRequest>
+    public interface IHttpRequest
     {
-        TRequest Advanced { get; }
-
         ContentType ContentType { get; }
 
         NameValueCollection Headers { get; }
@@ -19,27 +17,20 @@ namespace Grapevine.Core
         NameValueCollection QueryString { get; }
     }
 
-    public interface IInboundHttpRequest
+    public class HttpRequest : IHttpRequest
     {
-    }
+        public HttpListenerRequest Advanced { get; protected internal set; }
 
-    public interface IInboundHttpRequest<out TRequest> : IInboundHttpRequest, IHttpRequest<TRequest>
-    {
-    }
+        public ContentType ContentType { get; protected internal set; }
 
-    public interface IOutboundHttpRequest
-    {
-    }
+        public NameValueCollection Headers { get; protected internal set; }
 
-    public interface IOutboundHttpRequest<out TRequest> : IOutboundHttpRequest, IHttpRequest<TRequest>
-    {
-    }
+        public HttpMethod HttpMethod { get; protected internal set; }
+        public string PathInfo { get; protected internal set; }
 
-    public class InboundHttpRequest : IInboundHttpRequest<HttpListenerRequest>
-    {
-        public HttpListenerRequest Advanced { get; }
+        public NameValueCollection QueryString { get; protected internal set; }
 
-        public InboundHttpRequest(System.Net.HttpListenerRequest request)
+        protected internal HttpRequest(HttpListenerRequest request)
         {
             Advanced = request;
 
@@ -47,15 +38,5 @@ namespace Grapevine.Core
             ContentType = ContentTypes.FromString(Advanced.ContentType);
             HttpMethod = HttpMethods.FromString(Advanced.HttpMethod);
         }
-
-        public ContentType ContentType { get; }
-
-        public NameValueCollection Headers => Advanced.Headers;
-
-        public HttpMethod HttpMethod { get; }
-
-        public string PathInfo { get; }
-
-        public NameValueCollection QueryString => Advanced.QueryString;
     }
 }

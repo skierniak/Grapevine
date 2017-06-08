@@ -8,7 +8,7 @@ namespace Grapevine.Core
     /// </summary>
     /// <typeparam name="TListener"></typeparam>
     /// <typeparam name="TContext"></typeparam>
-    public interface IHttpListener<out TListener, out TContext>
+    public interface IHttpListener<out TListener>
     {
         TListener Advanced { get; }
 
@@ -20,7 +20,7 @@ namespace Grapevine.Core
 
         void Close();
 
-        TContext EndGetContext(IAsyncResult asyncResult);
+        IHttpContext EndGetContext(IAsyncResult asyncResult);
 
         void Start();
 
@@ -30,7 +30,7 @@ namespace Grapevine.Core
     /// <summary>
     /// Wrapper for an instance of System.Net.HttpListener with selective functionality exposed
     /// </summary>
-    public class HttpListener : IHttpListener<System.Net.HttpListener, System.Net.HttpListenerContext>
+    public class HttpListener : IHttpListener<System.Net.HttpListener>
     {
         public System.Net.HttpListener Advanced { get; }
 
@@ -53,9 +53,11 @@ namespace Grapevine.Core
             Advanced.Close();
         }
 
-        public System.Net.HttpListenerContext EndGetContext(IAsyncResult asyncResult)
+        public IHttpContext EndGetContext(IAsyncResult asyncResult)
         {
-            return Advanced.EndGetContext(asyncResult);
+            var result = Advanced.EndGetContext(asyncResult);
+            var context = new HttpContext(result);
+            return context;
         }
 
         public void Start()

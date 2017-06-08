@@ -1,52 +1,61 @@
-﻿using System.IO;
+﻿using System.Collections.Specialized;
 using System.Net;
+using System.Text;
 using Grapevine.Common;
+using HttpStatusCode = Grapevine.Common.HttpStatusCode;
 
 namespace Grapevine.Core
 {
-    public interface IHttpResponse<out TResponse>
+    public interface IHttpResponse
     {
-        TResponse Advanced { get; }
-    }
+        /// <summary>
+        /// Gets or sets the Encoding for this response's OutputStream
+        /// </summary>
+        Encoding ContentEncoding { get; set; }
 
-    public interface IInboundHttpResponse
-    {
+        /// <summary>
+        /// Gets or sets the MIME type of the content returned
+        /// </summary>
+        ContentType ContentType { get; set; }
 
-    }
+        /// <summary>
+        /// Gets or sets the collection of header name/value pairs returned by the server
+        /// </summary>
+        NameValueCollection Headers { get; set; }
 
-    public interface IInboundHttpResponse<out TResponse> : IInboundHttpResponse, IHttpResponse<TResponse>
-    {
-        
-    }
+        bool ResponseSent { get; set; }
 
-    public interface IOutboundHttpResponse
-    {
-        bool ResponseSent { get; }
+        HttpStatusCode StatusCode { get; set; }
+
+        string StatusDescription { get; }
 
         void AddHeader(string name, string value);
 
         void SendResponse(byte[] contents);
     }
 
-    public interface IOutboundHttpResponse<out TResponse> : IOutboundHttpResponse, IHttpResponse<TResponse>
+    public class HttpResponse : IHttpResponse
     {
-        
-    }
+        public static int DefaultHoursToExpire = 23;
 
-    /// <summary>
-    /// Represents a response to a request being handled by an HttpListener object
-    /// </summary>
-    public class OutboundHttpResponse : IOutboundHttpResponse<HttpListenerResponse>
-    {
-        public HttpListenerResponse Advanced { get; }
+        public HttpListenerResponse Advanced { get; set; }
 
-        public bool ResponseSent { get; protected internal set; }
+        public Encoding ContentEncoding { get; set; }
 
-        public bool EnableCompress { get; set; }
+        public ContentType ContentType { get; set; }
 
-        public OutboundHttpResponse(System.Net.HttpListenerResponse response)
+        public NameValueCollection Headers { get; set; }
+
+        public bool ResponseSent { get; set; }
+
+        public HttpStatusCode StatusCode { get; set; }
+
+        public string StatusDescription => Advanced.StatusDescription;
+
+        protected internal HttpResponse(HttpListenerResponse response)
         {
             Advanced = response;
+            ContentEncoding = Encoding.ASCII;
         }
 
         public void AddHeader(string name, string value)
@@ -63,7 +72,6 @@ namespace Grapevine.Core
              * research on this first.
              * 
              * The original method is intact below, for reference.
-
             if (RequestHeaders.AllKeys.Contains("Accept-Encoding") && RequestHeaders["Accept-Encoding"].Contains("gzip") && contents.Length > 1024)
             {
                 using (var ms = new MemoryStream())
@@ -84,19 +92,6 @@ namespace Grapevine.Core
             Advanced.Close();
 
             ResponseSent = true;
-        }
-    }
-
-    public static class OutboundHttpResponseExtensions
-    {
-        public static void SendResponse(this IOutboundHttpResponse response, Common.HttpStatusCode statusCode)
-        {
-            
-        }
-
-        public static void SendResponse(this IOutboundHttpResponse response, Stream stream)
-        {
-
         }
     }
 }
