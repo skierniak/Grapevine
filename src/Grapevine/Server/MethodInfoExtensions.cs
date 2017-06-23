@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using Grapevine.Common;
+using Grapevine.Core;
 using Grapevine.Exceptions;
 
 namespace Grapevine.Server
@@ -11,15 +12,14 @@ namespace Grapevine.Server
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="methodInfo"></param>
         /// <returns></returns>
-        internal static Action<T> ConvertToAction<T>(this MethodInfo methodInfo)
+        internal static Action<IHttpContext> ConvertToAction(this MethodInfo methodInfo)
         {
-            methodInfo.IsRestRouteEligible<T>(true); // will throw an aggregate exception if the method is not eligible
+            methodInfo.IsRestRouteEligible(true); // will throw an aggregate exception if the method is not eligible
 
             // Static method
-            if (methodInfo.IsStatic || methodInfo.ReflectedType == null)
+            if (methodInfo.IsStatic)
             {
                 return context => { methodInfo.Invoke(null, new object[] { context }); };
             }
@@ -46,7 +46,7 @@ namespace Grapevine.Server
         /// <param name="method"></param>
         /// <param name="throwExceptionWhenFalse"></param>
         /// <returns></returns>
-        internal static bool IsRestRouteEligible<T>(this MethodInfo method, bool throwExceptionWhenFalse = false)
+        internal static bool IsRestRouteEligible(this MethodInfo method, bool throwExceptionWhenFalse = false)
         {
             if (method == null) throw new ArgumentNullException(nameof(method));
 
@@ -67,7 +67,7 @@ namespace Grapevine.Server
             if (args.Length != 1) exceptions.Add(new InvalidRouteMethodException($"{method.Name} must accept one and only one argument"));
 
             // First argument to method must be of type T
-            if (args.Length > 0 && args[0].ParameterType != typeof(T)) exceptions.Add(new InvalidRouteMethodException($"{method.Name}: first argument must be of type {typeof(T).Name}"));
+            if (args.Length > 0 && args[0].ParameterType != typeof(IHttpContext)) exceptions.Add(new InvalidRouteMethodException($"{method.Name}: first argument must be of type {typeof(IHttpContext).Name}"));
 
             // Return boolean value
             if (exceptions.Count == 0) return true;
