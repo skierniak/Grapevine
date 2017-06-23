@@ -19,7 +19,7 @@ namespace Grapevine.Logging
         }
 
         /// <summary>
-        /// The logging provider used for logging in Npgsql.
+        /// The logging provider used for logging in Grapevine.
         /// </summary>
         public static IGrapevineLoggingProvider Provider
         {
@@ -80,6 +80,11 @@ namespace Grapevine.Logging
             } while (declaringType.Module.Name.Equals("mscorlib.dll", StringComparison.OrdinalIgnoreCase));
 
             return className;
+        }
+
+        public static void LogToConsole()
+        {
+            Provider = new ConsoleLoggingProvider();
         }
     }
 }
