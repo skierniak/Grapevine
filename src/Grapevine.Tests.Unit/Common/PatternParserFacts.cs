@@ -180,5 +180,46 @@ namespace Grapevine.Tests.Unit.Common
                 regex.IsMatch(pathinfo).ShouldBeFalse();
             }
         }
+
+        public class ExtractParams
+        {
+            [Fact]
+            public void ExtractsNamedParameters()
+            {
+                const string pathinfo = "/user/1234/action/promote";
+                const string pathInfoPattern = "/user/[id]/action/[action]";
+                var pattern = PatternParser.GenerateRegEx(pathInfoPattern);
+                var keys = PatternParser.GeneratePatternKeys(pathInfoPattern);
+
+                var @params = PatternParser.ExtractParams(pathinfo, pattern, keys);
+
+                @params.Count.ShouldBe(2);
+
+                @params.ContainsKey("id").ShouldBeTrue();
+                @params["id"].ShouldBe("1234");
+
+                @params.ContainsKey("action").ShouldBeTrue();
+                @params["action"].ShouldBe("promote");
+            }
+
+            [Fact]
+            public void ExtractsUnnamedParameters()
+            {
+                const string pathinfo = "/user/1234/action/promote";
+                const string pathInfoPattern = @"^/user/(\d+)/action/(\w+)$";
+                var pattern = PatternParser.GenerateRegEx(pathInfoPattern);
+                var keys = PatternParser.GeneratePatternKeys(pathInfoPattern);
+
+                var @params = PatternParser.ExtractParams(pathinfo, pattern, keys);
+
+                @params.Count.ShouldBe(2);
+
+                @params.ContainsKey("p0").ShouldBeTrue();
+                @params["p0"].ShouldBe("1234");
+
+                @params.ContainsKey("p1").ShouldBeTrue();
+                @params["p1"].ShouldBe("promote");
+            }
+        }
     }
 }

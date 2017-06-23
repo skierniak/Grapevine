@@ -51,5 +51,28 @@ namespace Grapevine.Common
 
             return new Regex(pattern.ToString());
         }
+
+        /// <summary>
+        /// Gets a dictionary of parameter values from the PathInfo of the request
+        /// </summary>
+        /// <param name="pathinfo"></param>
+        /// /// <param name="pattern"></param>
+        /// /// <param name="keys"></param>
+        /// <returns>Dictionary&lt;string, string&gt;</returns>
+        public static Dictionary<string, string> ExtractParams(string pathinfo, Regex pattern, List<string> keys)
+        {
+            var parsed = new Dictionary<string, string>();
+            var idx = 0;
+
+            var matches = pattern.Matches(pathinfo)[0].Groups;
+            for (var i = 1; i < matches.Count; i++)
+            {
+                var key = keys.Count > 0 && keys.Count > idx ? keys[idx] : $"p{idx}";
+                parsed.Add(key, matches[i].Value);
+                idx++;
+            }
+
+            return parsed;
+        }
     }
 }
