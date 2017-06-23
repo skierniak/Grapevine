@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Grapevine.Common;
@@ -7,12 +8,12 @@ using Grapevine.Core;
 
 namespace Grapevine.Server
 {
-    public interface IRoute<in TContext>
+    public interface IRoute
     {
         /// <summary>
         /// Gets the generic delegate that will be run when the route is invoked
         /// </summary>
-        Action<TContext> Delegate { get; }
+        Action<IHttpContext> Delegate { get; }
 
         /// <summary>
         /// Gets or sets an optional description for the route that can be useful when logging or debugging
@@ -49,44 +50,48 @@ namespace Grapevine.Server
         /// </summary>
         /// <param name="context"></param>
         /// <returns>bool</returns>
-        bool Matches(TContext context);
+        bool Matches(IHttpContext context);
+
+        IRoute MatchOn(string header, Regex pattern);
 
         /// <summary>
         /// Invokes the delegate if enabled with the supplied context
         /// </summary>
         /// <param name="context"></param>
-        void Invoke(TContext context);
+        void Invoke(IHttpContext context);
     }
 
-    public class Route : IRoute<HttpContext>
+    public class Route : IRoute
     {
         /// <summary>
         /// The pattern keys specified in the PathInfo
         /// </summary>
-        protected readonly List<string> PatternKeys;
+        protected internal readonly List<string> PatternKeys;
 
-        public Action<HttpContext> Delegate { get; }
+        protected internal readonly Dictionary<string, Regex> MatchesOn;
+
+        public Action<IHttpContext> Delegate { get; protected internal set; }
 
         public string Description { get; set; }
 
         public bool Enabled { get; set; }
 
-        public HttpMethod HttpMethod { get; }
+        public HttpMethod HttpMethod { get; protected internal set; }
 
-        public string Name { get; }
+        public string Name { get; protected internal set; }
 
-        public string PathInfo { get; }
+        public string PathInfo { get; protected internal set; }
 
-        public Regex PathInfoPattern { get; }
+        public Regex PathInfoPattern { get; protected internal set; }
 
-        public Route(MethodInfo methodInfo, HttpMethod httpMethod, string pathInfo):this(httpMethod, pathInfo)
+        public Route(MethodInfo methodInfo, HttpMethod httpMethod, string pathInfo) : this(httpMethod, pathInfo)
         {
-            Delegate = methodInfo.ConvertToAction<HttpContext>();
+            Delegate = methodInfo.ConvertToAction();
             Name = $"{methodInfo.ReflectedType.FullName}.{methodInfo.Name}";
             Description = $"{HttpMethod} {PathInfo} > {Name}";
         }
 
-        public Route(Action<HttpContext> action, HttpMethod httpMethod, string pathInfo):this(httpMethod, pathInfo)
+        public Route(Action<IHttpContext> action, HttpMethod httpMethod, string pathInfo) : this(httpMethod, pathInfo)
         {
             if (action == null) throw new ArgumentNullException(nameof(action));
 
@@ -100,23 +105,40 @@ namespace Grapevine.Server
             Enabled = true;
 
             HttpMethod = httpMethod;
-            PathInfo = (!string.IsNullOrWhiteSpace(pathInfo)) ? pathInfo : string.Empty;
+            PathInfo = !string.IsNullOrWhiteSpace(pathInfo) ? pathInfo : string.Empty;
 
             PatternKeys = PatternParser.GeneratePatternKeys(PathInfo);
             PathInfoPattern = PatternParser.GenerateRegEx(PathInfo);
+            MatchesOn = new Dictionary<string, Regex>();
         }
 
-        public bool Matches(HttpContext context)
+        public bool Matches(IHttpContext context)
         {
-            return HttpMethod.IsEquivalentTo(context.Request.HttpMethod) &&
-                   PathInfoPattern.IsMatch(context.Request.PathInfo);
+            if (!HttpMethod.IsEquivalentTo(context.Request.HttpMethod) ||
+                !PathInfoPattern.IsMatch(context.Request.PathInfo)) return false;
+
+            var headers = context.Request.Headers;
+            foreach (var condition in MatchesOn)
+            {
+                var value = headers.Get(condition.Key) ?? string.Empty;
+                if (condition.Value.IsMatch(value)) continue;
+                return false;
+            }
+
+            return true;
         }
 
-        public void Invoke(HttpContext context)
+        public IRoute MatchOn(string header, Regex pattern)
+        {
+            MatchesOn[header] = pattern;
+            return this;
+        }
+
+        public void Invoke(IHttpContext context)
         {
             if (!Enabled) return;
 
-            // get path parameters
+            context.Request.PathParameters = PatternParser.ExtractParams(context.Request.PathInfo, PathInfoPattern, PatternKeys);
 
             Delegate.Invoke(context);
         }

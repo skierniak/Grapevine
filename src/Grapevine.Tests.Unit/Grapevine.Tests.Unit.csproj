@@ -82,6 +82,7 @@
     <Compile Include="Common\UriSchemeFacts.cs" />
     <Compile Include="Interfaces\HttpContextFacts.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Server\RouteFacts.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
