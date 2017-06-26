@@ -84,7 +84,7 @@
     <Compile Include="Common\StreamExtensionFacts.cs" />
     <Compile Include="Common\TypeExtensionsFacts.cs" />
     <Compile Include="Common\UriSchemeFacts.cs" />
-    <Compile Include="Interfaces\HttpContextFacts.cs" />
+    <Compile Include="Core\HttpContextFacts.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Server\RouteFacts.cs" />
   </ItemGroup>

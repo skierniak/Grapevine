@@ -670,7 +670,7 @@ namespace Grapevine.Tests.Unit.Server
             }
             finally
             {
-                folder.Dispose();
+                folder?.Dispose();
             }
         }
     }
