@@ -49,6 +49,8 @@
     <Compile Include="Common\NameValueCollectionExtensions.cs" />
     <Compile Include="Common\PortFinder.cs" />
     <Compile Include="Core\IHttpResponseExtensions.cs" />
+    <Compile Include="Core\Json\GrapevineJsonManager.cs" />
+    <Compile Include="Core\Json\IGrapevineJsonProvider.cs" />
     <Compile Include="Server\MethodInfoExtensions.cs" />
     <Compile Include="Common\ObjectExtensions.cs" />
     <Compile Include="Common\StreamExtensions.cs" />
