@@ -1,4 +1,4 @@
-﻿namespace Grapevine.Logging
+namespace Grapevine.Core.Logging
 {
     public interface IGrapevineLoggingProvider
     {

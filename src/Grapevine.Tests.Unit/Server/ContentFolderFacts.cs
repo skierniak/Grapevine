@@ -12,6 +12,7 @@ using Grapevine.Core;
 using NSubstitute;
 using Shouldly;
 using Xunit;
+using FileNotFoundException = Grapevine.Core.Exceptions.FileNotFoundException;
 using HttpStatusCode = Grapevine.Common.HttpStatusCode;
 
 namespace Grapevine.Tests.Unit.Server
@@ -546,7 +547,7 @@ namespace Grapevine.Tests.Unit.Server
 
                 _folder.Prefix = prefix;
 
-                Should.Throw<Exceptions.FileNotFoundException>(() => _folder.SendFile(context));
+                Should.Throw<FileNotFoundException>(() => _folder.SendFile(context));
             }
         }
 

@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using Grapevine.Core;
 using Grapevine.Common;
-using FileNotFoundException = Grapevine.Exceptions.FileNotFoundException;
+using FileNotFoundException = Grapevine.Core.Exceptions.FileNotFoundException;
 
 namespace Grapevine.Server
 {

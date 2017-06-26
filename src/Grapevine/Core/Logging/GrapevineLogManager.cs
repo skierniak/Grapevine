@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Reflection;
 
-namespace Grapevine.Logging
+namespace Grapevine.Core.Logging
 {
     /// <summary>
     /// Manages logging for Grapevine, used to set the loggging provider.

@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Text;
 
-namespace Grapevine.Logging
+namespace Grapevine.Core.Logging
 {
     public class ConsoleLoggingProvider : IGrapevineLoggingProvider
     {

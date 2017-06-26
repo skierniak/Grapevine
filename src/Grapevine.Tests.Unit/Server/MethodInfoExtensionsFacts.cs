@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using Grapevine.Core;
-using Grapevine.Exceptions;
+using Grapevine.Core.Exceptions;
 using Grapevine.Server;
 using NSubstitute;
 using Shouldly;

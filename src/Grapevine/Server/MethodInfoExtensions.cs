@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Grapevine.Common;
 using Grapevine.Core;
-using Grapevine.Exceptions;
+using Grapevine.Core.Exceptions;
 
 namespace Grapevine.Server
 {

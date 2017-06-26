@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Grapevine.Exceptions
+namespace Grapevine.Core.Exceptions
 {
     /// <summary>
     /// Thrown when a method is not eligible to be used as a route

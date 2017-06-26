@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace Grapevine.Logging
+namespace Grapevine.Core.Logging
 {
     public abstract class GrapevineLogger
     {

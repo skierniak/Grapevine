@@ -1,7 +1,7 @@
 ﻿using System;
 using Grapevine.Common;
 
-namespace Grapevine.Exceptions
+namespace Grapevine.Core.Exceptions
 {
     /// <summary>
     /// 
