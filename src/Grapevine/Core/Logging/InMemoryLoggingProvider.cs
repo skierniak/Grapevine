@@ -16,6 +16,8 @@ namespace Grapevine.Core.Logging
     {
         private static readonly ConcurrentDictionary<string, InMemoryLogger> CreatedLoggers;
 
+        public string Name { get; protected internal set; }
+
         static InMemoryLogger()
         {
             CreatedLoggers = new ConcurrentDictionary<string, InMemoryLogger>();
@@ -23,7 +25,7 @@ namespace Grapevine.Core.Logging
 
         public static InMemoryLogger GetLogger(string name)
         {
-            return CreatedLoggers.GetOrAdd(name, s => new InMemoryLogger());
+            return CreatedLoggers.GetOrAdd(name, s => new InMemoryLogger(name));
         }
 
         public static void RemoveLogger(string name)
@@ -34,8 +36,9 @@ namespace Grapevine.Core.Logging
 
         public List<LogEvent> Logs { get; }
 
-        protected InMemoryLogger()
+        protected InMemoryLogger(string name)
         {
+            Name = name;
             Logs = new List<LogEvent>();
         }
 

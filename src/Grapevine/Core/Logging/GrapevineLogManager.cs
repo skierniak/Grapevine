@@ -44,12 +44,12 @@ namespace Grapevine.Core.Logging
 
         internal static GrapevineLogger CreateLogger(Type type)
         {
-            return Provider.CreateLogger(type.Name);
+            return Provider.CreateLogger(type.FullName);
         }
 
         internal static GrapevineLogger CreateLogger<T>()
         {
-            return Provider.CreateLogger(typeof(T).Name);
+            return Provider.CreateLogger(typeof(T).FullName);
         }
 
         internal static GrapevineLogger GetCurrentClassLogger()
