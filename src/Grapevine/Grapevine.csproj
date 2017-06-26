@@ -74,7 +74,10 @@
     <Compile Include="Core\Logging\NoOpLoggingProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Server\ContentFolder.cs" />
+    <Compile Include="Server\PathInfoService.cs" />
     <Compile Include="Server\RestCluster.cs" />
+    <Compile Include="Server\RestResource.cs" />
+    <Compile Include="Server\RestRoute.cs" />
     <Compile Include="Server\RestServer.cs" />
     <Compile Include="Server\Route.cs" />
     <Compile Include="Server\Router.cs" />

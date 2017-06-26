@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Grapevine.Common;
 using Grapevine.Core;
@@ -111,6 +112,29 @@ namespace Grapevine.Server
              * that the method can be invoked later on during routing.
              */
             return true;
+        }
+
+        /// <summary>
+        /// Returns an enumerable of all RestRoute attributes on a method.
+        /// </summary>
+        /// <param name="method"></param>
+        /// <returns></returns>
+        internal static IEnumerable<RestRoute> GetRouteAttributes(this MethodInfo method)
+        {
+            return method.GetCustomAttributes(true).Where(a => a is RestRoute).Cast<RestRoute>();
+        }
+
+        /// <summary>
+        /// Returns a value indicating whether the method is a valid RestRoute.
+        /// </summary>
+        internal static bool IsRestRoute(this MethodInfo method, bool throwExceptionWhenFalse = false)
+        {
+            if (method.GetCustomAttributes(true).Any(a => a is RestRoute))
+                return method.IsRestRouteEligible(throwExceptionWhenFalse);
+            if (!throwExceptionWhenFalse) return false;
+
+            var exception = new InvalidRouteMethodException($"{method.Name} does not have the {typeof(RestRoute).Name} attribute");
+            throw new InvalidRouteMethodExceptions(new Exception[] { exception });
         }
     }
 }
