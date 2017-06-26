@@ -5,7 +5,7 @@
 using System.Collections.Generic;
 
 private XUnit2Settings xuSettings = new XUnit2Settings {ShadowCopy = false};
-private OpenCoverSettings ocSettings = new OpenCoverSettings().WithFilter("+[*]* -[*.Tests*]* -[*]*.*Config -[xunit*]* -[*]Grapevine.Core.* +[*]Grapevine.Core.Logging.*");
+private OpenCoverSettings ocSettings = new OpenCoverSettings().WithFilter("+[*]* -[*.Tests*]* -[*]*.*Config -[xunit*]* -[*]Grapevine.Core -[*]Grapevine.Core.Exceptions");
 
 Task("unit-test-coverage")
 .Does(() =>

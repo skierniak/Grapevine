@@ -5,20 +5,20 @@ namespace Grapevine.Core.Logging
     public abstract class GrapevineLogger
     {
         public abstract bool IsEnabled(GrapevineLogLevel level);
-        public abstract void Log(GrapevineLogLevel level, string requestId, string msg, Exception exception = null);
+        public abstract void Log(GrapevineLogLevel level, string requestId, string message, Exception exception = null);
 
-        public void Trace(string msg, string requestId = null) { Log(GrapevineLogLevel.Trace, requestId, msg); }
-        public void Debug(string msg, string requestId = null) { Log(GrapevineLogLevel.Debug, requestId, msg); }
-        public void Info(string msg, string requestId = null) { Log(GrapevineLogLevel.Info, requestId, msg); }
-        public void Warn(string msg, string requestId = null) { Log(GrapevineLogLevel.Warn, requestId, msg); }
-        public void Error(string msg, string requestId = null) { Log(GrapevineLogLevel.Error, requestId, msg); }
-        public void Fatal(string msg, string requestId = null) { Log(GrapevineLogLevel.Fatal, requestId, msg); }
+        public void Trace(string message, string requestId = null) { Log(GrapevineLogLevel.Trace, requestId, message); }
+        public void Debug(string message, string requestId = null) { Log(GrapevineLogLevel.Debug, requestId, message); }
+        public void Info(string message, string requestId = null) { Log(GrapevineLogLevel.Info, requestId, message); }
+        public void Warn(string message, string requestId = null) { Log(GrapevineLogLevel.Warn, requestId, message); }
+        public void Error(string message, string requestId = null) { Log(GrapevineLogLevel.Error, requestId, message); }
+        public void Fatal(string message, string requestId = null) { Log(GrapevineLogLevel.Fatal, requestId, message); }
 
-        public void Trace(string msg, Exception ex, string requestId = null) { Log(GrapevineLogLevel.Trace, requestId, msg, ex); }
-        public void Debug(string msg, Exception ex, string requestId = null) { Log(GrapevineLogLevel.Debug, requestId, msg, ex); }
-        public void Info(string msg, Exception ex, string requestId = null) { Log(GrapevineLogLevel.Info, requestId, msg, ex); }
-        public void Warn(string msg, Exception ex, string requestId = null) { Log(GrapevineLogLevel.Warn, requestId, msg, ex); }
-        public void Error(string msg, Exception ex, string requestId = null) { Log(GrapevineLogLevel.Error, requestId, msg, ex); }
-        public void Fatal(string msg, Exception ex, string requestId = null) { Log(GrapevineLogLevel.Fatal, requestId, msg, ex); }
+        public void Trace(string message, Exception exception, string requestId = null) { Log(GrapevineLogLevel.Trace, requestId, message, exception); }
+        public void Debug(string message, Exception exception, string requestId = null) { Log(GrapevineLogLevel.Debug, requestId, message, exception); }
+        public void Info(string message, Exception exception, string requestId = null) { Log(GrapevineLogLevel.Info, requestId, message, exception); }
+        public void Warn(string message, Exception exception, string requestId = null) { Log(GrapevineLogLevel.Warn, requestId, message, exception); }
+        public void Error(string message, Exception exception, string requestId = null) { Log(GrapevineLogLevel.Error, requestId, message, exception); }
+        public void Fatal(string message, Exception exception, string requestId = null) { Log(GrapevineLogLevel.Fatal, requestId, message, exception); }
     }
 }

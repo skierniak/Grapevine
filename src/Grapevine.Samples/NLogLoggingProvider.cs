@@ -26,9 +26,9 @@ namespace Grapevine.Samples
             return _log.IsEnabled(ToNLogLogLevel(level));
         }
 
-        public override void Log(GrapevineLogLevel level, string requestId, string msg, Exception exception = null)
+        public override void Log(GrapevineLogLevel level, string requestId, string message, Exception exception = null)
         {
-            var ev = new LogEventInfo(ToNLogLogLevel(level), "", msg);
+            var ev = new LogEventInfo(ToNLogLogLevel(level), "", message);
             if (exception != null) ev.Exception = exception;
             if (!string.IsNullOrWhiteSpace(requestId)) ev.Properties["RequestId"] = requestId;
             _log.Log(ev);

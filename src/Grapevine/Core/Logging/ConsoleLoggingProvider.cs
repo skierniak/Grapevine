@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Grapevine.Core.Logging
@@ -6,8 +7,6 @@ namespace Grapevine.Core.Logging
     public class ConsoleLoggingProvider : IGrapevineLoggingProvider
     {
         private readonly GrapevineLogLevel _minLevel;
-        private readonly bool _printLevel;
-        private readonly bool _printRequestId;
 
         /// <summary>
         /// Constructs a new <see cref="ConsoleLoggingProvider"/>
@@ -15,11 +14,9 @@ namespace Grapevine.Core.Logging
         /// <param name="minLevel">Only messages of this level of higher will be logged</param>
         /// <param name="printLevel">If true, will output the log level (e.g. WARN). Defaults to false.</param>
         /// <param name="printRequestId">If true, will output the internal request id. Defaults to false.</param>
-        public ConsoleLoggingProvider(GrapevineLogLevel minLevel = GrapevineLogLevel.Info, bool printLevel = false, bool printRequestId = false)
+        public ConsoleLoggingProvider(GrapevineLogLevel minLevel = GrapevineLogLevel.Info)
         {
             _minLevel = minLevel;
-            _printLevel = printLevel;
-            _printRequestId = printRequestId;
         }
 
         /// <summary>
@@ -27,21 +24,22 @@ namespace Grapevine.Core.Logging
         /// </summary>
         public GrapevineLogger CreateLogger(string name)
         {
-            return new ConsoleLogger(_minLevel, _printLevel, _printRequestId);
+            return new ConsoleLogger(_minLevel);
         }
     }
 
     public class ConsoleLogger : GrapevineLogger
     {
         private readonly GrapevineLogLevel _minLevel;
-        private readonly bool _printLevel;
-        private readonly bool _printRequestId;
 
-        internal ConsoleLogger(GrapevineLogLevel minLevel, bool printLevel, bool printRequestId)
+        /// <summary>
+        /// String defining the way the date and time should be formtted when logged
+        /// </summary>
+        protected internal string DateFormat => @"M/d/yyyy hh:mm:ss tt";
+
+        internal ConsoleLogger(GrapevineLogLevel minLevel)
         {
             _minLevel = minLevel;
-            _printLevel = printLevel;
-            _printRequestId = printRequestId;
         }
 
         public override bool IsEnabled(GrapevineLogLevel level)
@@ -49,32 +47,16 @@ namespace Grapevine.Core.Logging
             return level >= _minLevel;
         }
 
-        public override void Log(GrapevineLogLevel level, string requestId, string msg, Exception exception = null)
+        public override void Log(GrapevineLogLevel level, string requestId, string message, Exception exception = null)
         {
             if (!IsEnabled(level)) return;
 
-            var sb = new StringBuilder();
-            if (_printLevel)
-            {
-                sb.Append(level.ToString().ToUpper());
-                sb.Append(' ');
-            }
+            var now = DateTime.Now.ToString(DateFormat);
+            var lvl = level.ToString().ToUpper();
+            var msg = exception == null ? message : $"{message}:{exception.Message}{Environment.NewLine}{exception.StackTrace}";
+            var rid = requestId ?? "---";
 
-            if (_printRequestId && !string.IsNullOrWhiteSpace(requestId))
-            {
-                sb.Append("[");
-                sb.Append(requestId);
-                sb.Append("] ");
-            }
-
-            sb.AppendLine(msg);
-
-            if (exception != null)
-            {
-                sb.AppendLine(exception.ToString());
-            }
-
-            Console.Error.WriteLine(sb.ToString());
+            Console.Error.WriteLine($"{now}\t{lvl}\t[{rid}] {msg}");
         }
     }
 }

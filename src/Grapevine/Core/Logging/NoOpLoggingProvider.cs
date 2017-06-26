@@ -21,7 +21,7 @@ namespace Grapevine.Core.Logging
             return false;
         }
 
-        public override void Log(GrapevineLogLevel level, string requestId, string msg, Exception exception = null)
+        public override void Log(GrapevineLogLevel level, string requestId, string message, Exception exception = null)
         {
         }
     }

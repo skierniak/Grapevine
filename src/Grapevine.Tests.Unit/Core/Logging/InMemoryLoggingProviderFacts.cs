@@ -10,7 +10,7 @@ namespace Grapevine.Tests.Unit.Core.Logging
         public void LogsAllLevels()
         {
             const string logid = "logs-all-levels";
-            var logger = InMemoryLogger.GetLogger(logid);
+            var logger = (InMemoryLogger) new InMemoryLoggingProvider().CreateLogger(logid);
 
             logger.ShouldSatisfyAllConditions
             (
