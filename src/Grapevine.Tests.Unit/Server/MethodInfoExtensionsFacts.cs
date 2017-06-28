@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using Grapevine.Common;
 using Grapevine.Core;
 using Grapevine.Core.Exceptions;
 using Grapevine.Server;
@@ -16,8 +19,8 @@ namespace Grapevine.Tests.Unit.Server
             [Fact]
             public void ThrowsExceptionWhenMethodIsNotRestRouteEligible()
             {
-                var methodA = typeof(ConvertToActionHelpers.TestClass).GetMethod("MethodTakesZeroArgs");
-                var methodB = typeof(ConvertToActionHelpers.TestClass).GetMethod("MethodTakesTwoArgs");
+                var methodA = typeof(TestClass).GetMethod("MethodTakesZeroArgs");
+                var methodB = typeof(TestClass).GetMethod("MethodTakesTwoArgs");
 
                 Should.Throw<InvalidRouteMethodExceptions>(() => { methodA.ConvertToAction(); });
                 Should.Throw<InvalidRouteMethodExceptions>(() => { methodB.ConvertToAction(); });
@@ -27,7 +30,7 @@ namespace Grapevine.Tests.Unit.Server
             [Fact]
             public void ReturnsActionForStaticMethod()
             {
-                var method = typeof(ConvertToActionHelpers.TestClass).GetMethod("StaticMethod");
+                var method = typeof(TestClass).GetMethod("StaticMethod");
                 var result = method.ConvertToAction();
                 result.ShouldNotBeNull();
             }
@@ -35,14 +38,11 @@ namespace Grapevine.Tests.Unit.Server
             [Fact]
             public void ReturnsActionForInstanceMethod()
             {
-                var method = typeof(ConvertToActionHelpers.TestClass).GetMethod("InstanceMethod");
+                var method = typeof(TestClass).GetMethod("InstanceMethod");
                 var result = method.ConvertToAction();
                 result.ShouldNotBeNull();
             }
-        }
 
-        public class ConvertToActionHelpers
-        {
             public class TestClass
             {
                 public void MethodTakesZeroArgs()
@@ -76,50 +76,47 @@ namespace Grapevine.Tests.Unit.Server
             [Fact]
             public void ReturnsFalseWhenMethodInfoIsNotInvokable()
             {
-                typeof(IsRestRouteEligibleHelpers.TestAbstract).GetMethod("TestAbstractMethod").IsRestRouteEligible().ShouldBeFalse();
+                typeof(TestAbstract).GetMethod("TestAbstractMethod").IsRestRouteEligible().ShouldBeFalse();
             }
 
             [Fact]
             public void ReturnsFalseWhenMethodInfoReflectedTypeHasNoParameterlessConstructor()
             {
-                typeof(IsRestRouteEligibleHelpers.NoParameterlessConstructor).GetMethod("TestMethod").IsRestRouteEligible().ShouldBeFalse();
+                typeof(NoParameterlessConstructor).GetMethod("TestMethod").IsRestRouteEligible().ShouldBeFalse();
             }
 
             [Fact]
             public void ReturnsFalseWhenMethodIsSpecialName()
             {
-                typeof(IsRestRouteEligibleHelpers.TestClass).GetMethod("get_TestProperty").IsRestRouteEligible().ShouldBeFalse();
+                typeof(TestClass).GetMethod("get_TestProperty").IsRestRouteEligible().ShouldBeFalse();
             }
 
             [Fact]
             public void ReturnsFalseWhenMethodAcceptsMoreOrLessThanOneArgument()
             {
-                typeof(IsRestRouteEligibleHelpers.TestClass).GetMethod("TakesZeroArgs").IsRestRouteEligible().ShouldBeFalse();
-                typeof(IsRestRouteEligibleHelpers.TestClass).GetMethod("TakesTwoArgs").IsRestRouteEligible().ShouldBeFalse();
+                typeof(TestClass).GetMethod("TakesZeroArgs").IsRestRouteEligible().ShouldBeFalse();
+                typeof(TestClass).GetMethod("TakesTwoArgs").IsRestRouteEligible().ShouldBeFalse();
             }
 
             [Fact]
             public void ReturnsFalseWhenFirstArgumentIsNotIHttpContext()
             {
-                typeof(IsRestRouteEligibleHelpers.TestClass).GetMethod("TakesWrongArgs").IsRestRouteEligible().ShouldBeFalse();
+                typeof(TestClass).GetMethod("TakesWrongArgs").IsRestRouteEligible().ShouldBeFalse();
             }
 
             [Fact]
             public void ThrowsAggregateExceptionWhenThrowExceptionsIsTrue()
             {
                 Should.Throw<InvalidRouteMethodExceptions>(
-                    () => typeof(IsRestRouteEligibleHelpers.TestClass).GetMethod("TakesWrongArgs").IsRestRouteEligible(true));
+                    () => typeof(TestClass).GetMethod("TakesWrongArgs").IsRestRouteEligible(true));
             }
 
             [Fact]
             public void ReturnsTrueWhenMethodInfoIsEligible()
             {
-                typeof(IsRestRouteEligibleHelpers.TestClass).GetMethod("ValidRoute").IsRestRouteEligible().ShouldBeTrue();
+                typeof(TestClass).GetMethod("ValidRoute").IsRestRouteEligible().ShouldBeTrue();
             }
-        }
 
-        public class IsRestRouteEligibleHelpers
-        {
             public abstract class TestAbstract
             {
                 public abstract void TestAbstractMethod();
@@ -165,19 +162,19 @@ namespace Grapevine.Tests.Unit.Server
             [Fact]
             public void ReturnsTrueWhenMethodIsStatic()
             {
-                typeof(CanBeInvokedHelpers.ConcreteClass).GetMethod("StaticMethod").CanBeInvoked().ShouldBeTrue();
+                typeof(ConcreteClass).GetMethod("StaticMethod").CanBeInvoked().ShouldBeTrue();
             }
 
             [Fact]
             public void ReturnsTrueWhenMethodIsNotStatic()
             {
-                typeof(CanBeInvokedHelpers.ConcreteClass).GetMethod("NonStaticMethod").CanBeInvoked().ShouldBeTrue();
+                typeof(ConcreteClass).GetMethod("NonStaticMethod").CanBeInvoked().ShouldBeTrue();
             }
 
             [Fact]
             public void ReturnsFalseWhenMethodIsAbstract()
             {
-                typeof(CanBeInvokedHelpers.AbstractClass).GetMethod("AbstractMethod").CanBeInvoked().ShouldBeFalse();
+                typeof(AbstractClass).GetMethod("AbstractMethod").CanBeInvoked().ShouldBeFalse();
             }
 
             [Fact]
@@ -191,24 +188,21 @@ namespace Grapevine.Tests.Unit.Server
             [Fact]
             public void ReturnsFalseWhenReflectedTypeIsInterface()
             {
-                typeof(CanBeInvokedHelpers.ISomeInterface).GetMethod("SomeMethod").CanBeInvoked().ShouldBeFalse();
+                typeof(ISomeInterface).GetMethod("SomeMethod").CanBeInvoked().ShouldBeFalse();
             }
 
             [Fact]
             public void ReturnsFalseWhenReflectedTypeIsStruct()
             {
-                typeof(CanBeInvokedHelpers.SomeStruct).GetMethod("SomeMethod").CanBeInvoked().ShouldBeFalse();
+                typeof(SomeStruct).GetMethod("SomeMethod").CanBeInvoked().ShouldBeFalse();
             }
 
             [Fact]
             public void ReturnsFalseWhenReflectedTypeIsAbstract()
             {
-                typeof(CanBeInvokedHelpers.AbstractClass).GetMethod("RealMethod").CanBeInvoked().ShouldBeFalse();
+                typeof(AbstractClass).GetMethod("RealMethod").CanBeInvoked().ShouldBeFalse();
             }
-        }
 
-        public class CanBeInvokedHelpers
-        {
             public abstract class AbstractClass
             {
                 public abstract void AbstractMethod();
@@ -239,6 +233,102 @@ namespace Grapevine.Tests.Unit.Server
             public interface ISomeInterface
             {
                 void SomeMethod();
+            }
+
+        }
+
+        public class GetRouteAttributes
+        {
+            [Fact]
+            public void ReturnsEmptyListWhenNoAttriubtes()
+            {
+                var list = typeof(TestClass).GetMethod("NoAttributes").GetRouteAttributes();
+
+                list.ShouldSatisfyAllConditions
+                (
+                    () => list.ShouldNotBeNull(),
+                    () => list.ShouldBeEmpty()
+                );
+            }
+
+            [Fact]
+            public void ReturnsListWhenSingleAttribute()
+            {
+                var list = typeof(TestClass).GetMethod("SingleAttribute").GetRouteAttributes();
+
+                list.ShouldSatisfyAllConditions
+                (
+                    () => list.ShouldNotBeNull(),
+                    () => list.Count().ShouldBe(1)
+                );
+            }
+
+            [Fact]
+            public void ReturnsListWhenMultipleAttributes()
+            {
+                var list = typeof(TestClass).GetMethod("MultipleAttributes").GetRouteAttributes();
+
+                list.ShouldSatisfyAllConditions
+                (
+                    () => list.ShouldNotBeNull(),
+                    () => list.Count().ShouldBe(2)
+                );
+            }
+
+            public class TestClass
+            {
+                public void NoAttributes(IHttpContext context)
+                {
+                }
+
+                [RestRoute(HttpMethod = HttpMethod.CONNECT, PathInfo = "Attribute1")]
+                public void SingleAttribute(IHttpContext context)
+                {
+                }
+
+                [RestRoute(HttpMethod = HttpMethod.DELETE, PathInfo = "AttributeA")]
+                [RestRoute(HttpMethod = HttpMethod.OPTIONS, PathInfo = "AttributeB")]
+                public void MultipleAttributes(IHttpContext context)
+                {
+                }
+            }
+        }
+
+        public class IsRestRoute
+        {
+            [Fact]
+            public void ReturnsTrueWhenAttributeExistsAndMethodIsEligible()
+            {
+                typeof(TestClass).GetMethod("EligibleRoute").IsRestRoute().ShouldBeTrue();
+            }
+
+            [Fact]
+            public void ReturnsFalseWhenAttributeDoesNotExist()
+            {
+                typeof(TestClass).GetMethod("MissingAttribute").IsRestRoute().ShouldBeFalse();
+            }
+
+            [Fact]
+            public void ReturnsFaleWhenAttributeExistsButMethodIsNotEligible()
+            {
+                typeof(TestClass).GetMethod("InEligibleRoute").IsRestRoute().ShouldBeFalse();
+            }
+
+            [Fact]
+            public void ThrowsExceptionWhenFlagIsTrue()
+            {
+                Should.Throw<InvalidRouteMethodExceptions>(() => typeof(TestClass).GetMethod("MissingAttribute").IsRestRoute(true));
+            }
+
+            public class TestClass
+            {
+                [RestRoute]
+                public void EligibleRoute(IHttpContext context) { }
+
+                [RestRoute]
+                public void InEligibleRoute(IHttpContext context, bool flag) { }
+
+                public void MissingAttribute(IHttpContext context) { }
             }
         }
     }
