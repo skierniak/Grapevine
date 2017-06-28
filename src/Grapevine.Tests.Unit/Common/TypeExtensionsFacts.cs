@@ -1,4 +1,6 @@
 ﻿using Grapevine.Common;
+using Grapevine.Server;
+using NSubstitute;
 using Shouldly;
 using Xunit;
 
@@ -30,6 +32,45 @@ namespace Grapevine.Tests.Unit.Common
             public void ReturnsFalseWhenInterfaceIsChild()
             {
                 typeof(TestImplementation).Implements<ITestIntermediate>().ShouldBeFalse();
+            }
+
+            public interface ITestInterface
+            {
+                void TestMethod(string testParameter);
+            }
+
+            public interface ITestIntermediate : ITestInterface
+            {
+                void AnotherTestMethod();
+            }
+
+            public class TestImplementation : ITestInterface
+            {
+                public void TestMethod(string testParameter)
+                {
+                    throw new System.NotImplementedException();
+                }
+            }
+
+            public class NotATestImplementation
+            {
+                public void TestMethod(string testParameter)
+                {
+                    throw new System.NotImplementedException();
+                }
+            }
+
+            public class IntermediateImplementation : ITestIntermediate
+            {
+                public void TestMethod(string testParameter)
+                {
+                    throw new System.NotImplementedException();
+                }
+
+                public void AnotherTestMethod()
+                {
+                    throw new System.NotImplementedException();
+                }
             }
         }
 
@@ -70,122 +111,147 @@ namespace Grapevine.Tests.Unit.Common
             {
                 typeof(PrivateConstructor).HasParameterlessConstructor().ShouldBeFalse();
             }
-        }
-    }
 
-    public interface ITestInterface
-    {
-        void TestMethod(string testParameter);
-    }
+            public class ImplicitParameterless
+            {
+                public string SomeProperty { get; set; }
+            }
 
-    public interface ITestIntermediate : ITestInterface
-    {
-        void AnotherTestMethod();
-    }
+            public class OptionalParameters
+            {
+                public OptionalParameters(string someProperty = null)
+                {
+                    SomeProperty = someProperty;
+                }
 
-    public class TestImplementation : ITestInterface
-    {
-        public void TestMethod(string testParameter)
-        {
-            throw new System.NotImplementedException();
-        }
-    }
+                public string SomeProperty { get; set; }
+            }
 
-    public class NotATestImplementation
-    {
-        public void TestMethod(string testParameter)
-        {
-            throw new System.NotImplementedException();
-        }
-    }
+            public class ExplicitParameterless
+            {
+                public ExplicitParameterless()
+                {
+                    SomeProperty = "SomeProperty";
+                }
 
-    public class IntermediateImplementation : ITestIntermediate
-    {
-        public void TestMethod(string testParameter)
-        {
-            throw new System.NotImplementedException();
-        }
+                public string SomeProperty { get; set; }
+            }
 
-        public void AnotherTestMethod()
-        {
-            throw new System.NotImplementedException();
-        }
-    }
+            public class MultipleWithExplicit
+            {
+                public MultipleWithExplicit()
+                {
+                    Property1 = "Property1";
+                    Property2 = false;
+                }
 
-    public class ImplicitParameterless
-    {
-        public string SomeProperty { get; set; }
-    }
+                public MultipleWithExplicit(bool property2)
+                {
+                    Property1 = "Property1";
+                    Property2 = property2;
+                }
 
-    public class ExplicitParameterless
-    {
-        public ExplicitParameterless()
-        {
-            SomeProperty = "SomeProperty";
-        }
+                public MultipleWithExplicit(string property1)
+                {
+                    Property1 = property1;
+                    Property2 = false;
+                }
 
-        public string SomeProperty { get; set; }
-    }
+                public MultipleWithExplicit(string property1, bool property2)
+                {
+                    Property1 = property1;
+                    Property2 = property2;
+                }
 
-    public class MultipleWithExplicit
-    {
-        public MultipleWithExplicit()
-        {
-            Property1 = "Property1";
-            Property2 = false;
-        }
+                public string Property1 { get; set; }
+                public bool Property2 { get; set; }
+            }
 
-        public MultipleWithExplicit(bool property2)
-        {
-            Property1 = "Property1";
-            Property2 = property2;
-        }
+            public class NoParameterless
+            {
+                public NoParameterless(string someProperty)
+                {
+                    SomeProperty = someProperty;
+                }
 
-        public MultipleWithExplicit(string property1)
-        {
-            Property1 = property1;
-            Property2 = false;
-        }
+                public string SomeProperty { get; set; }
+            }
 
-        public MultipleWithExplicit(string property1, bool property2)
-        {
-            Property1 = property1;
-            Property2 = property2;
+            public class PrivateConstructor
+            {
+                private PrivateConstructor() { }
+
+                public string SomeProperty { get; set; }
+
+                public PrivateConstructor Generate()
+                {
+                    return new PrivateConstructor();
+                }
+            }
         }
 
-        public string Property1 { get; set; }
-        public bool Property2 { get; set; }
-    }
-
-    public class NoParameterless
-    {
-        public NoParameterless(string someProperty)
+        public class IsRestResource
         {
-            SomeProperty = someProperty;
+            [Fact]
+            public void AbstractClassesAreNotRestResources()
+            {
+                typeof(AbstractClass).IsRestResource().ShouldBeFalse();
+            }
+
+            [Fact]
+            public void NonClassesAreNotRestResources()
+            {
+                typeof(NotAClass).IsRestResource().ShouldBeFalse();
+            }
+
+            [Fact]
+            public void ClassesWithoutAttributeAreNotRestResources()
+            {
+                typeof(IsNotARestResource).IsRestResource().ShouldBeFalse();
+            }
+
+            [Fact]
+            public void ClassesWithAttributeAreRestResources()
+            {
+                typeof(IsARestResource).IsRestResource().ShouldBeTrue();
+            }
+
+            [RestResource]
+            public abstract class AbstractClass{}
+
+            public struct NotAClass{}
+
+            public class IsNotARestResource{}
+
+            [RestResource]
+            public class IsARestResource{}
         }
 
-        public string SomeProperty { get; set; }
-    }
-
-    public class OptionalParameters
-    {
-        public OptionalParameters(string someProperty = null)
+        public class GetRestResource
         {
-            SomeProperty = someProperty;
-        }
+            [Fact]
+            public void ReturnsNullIfIsNotRestResource()
+            {
+                typeof(NotARestResource).GetRestResource().ShouldBeNull();
+            }
 
-        public string SomeProperty { get; set; }
-    }
+            [Fact]
+            public void ReturnsRestResourceAttribute()
+            {
+                var result = typeof(ValidRestResource).GetRestResource();
 
-    public class PrivateConstructor
-    {
-        private PrivateConstructor() { }
+                result.ShouldSatisfyAllConditions
+                (
+                    () => result.ShouldNotBeNull(),
+                    () => result.BasePath.ShouldBe("something"),
+                    () => result.Scope.ShouldBe("otherthing")
+                );
+            }
 
-        public string SomeProperty { get; set; }
+            public class NotARestResource{}
 
-        public PrivateConstructor Generate()
-        {
-            return new PrivateConstructor();
+            [RestResource(BasePath = "something", Scope = "otherthing")]
+            public class ValidRestResource{}
         }
     }
 }
