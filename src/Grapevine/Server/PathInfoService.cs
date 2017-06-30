@@ -7,7 +7,7 @@ namespace Grapevine.Server
     {
         internal static string GeneratePathInfo(string pathInfo, string basePath)
         {
-            var pathinfo = pathInfo;
+            var pathinfo = pathInfo ?? string.Empty;
             var prefix = string.Empty;
 
             if (pathinfo.StartsWith("^"))
@@ -25,7 +25,7 @@ namespace Grapevine.Server
         internal static string GenerateBasePath(string basePath, Type type)
         {
             var bpArgument = basePath ?? string.Empty;
-            var bpOnResource = type.IsRestResource() ? type.GetRestResource().BasePath : string.Empty;
+            var bpOnResource = type != null && type.IsRestResource() ? type.GetRestResource().BasePath : string.Empty;
 
             if (string.IsNullOrWhiteSpace(bpArgument)) return bpOnResource;
             if (string.IsNullOrWhiteSpace(bpOnResource)) return bpArgument;
