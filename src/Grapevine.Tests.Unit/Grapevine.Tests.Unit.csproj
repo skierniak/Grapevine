@@ -88,11 +88,16 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Server\PathInfoServiceFacts.cs" />
     <Compile Include="Server\RouteFacts.cs" />
+    <Compile Include="Server\RouteScannerFacts.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Grapevine.Tests.Sample\Grapevine.Tests.Sample.csproj">
+      <Project>{166fcd84-9699-4b52-9900-7cce43e9d1fb}</Project>
+      <Name>Grapevine.Tests.Sample</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Grapevine\Grapevine.csproj">
       <Project>{C79E6853-F7A0-426F-883C-169651123256}</Project>
       <Name>Grapevine</Name>

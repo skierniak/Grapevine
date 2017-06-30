@@ -97,7 +97,7 @@ namespace Grapevine.Server
             { Assemblies.Add(assembly); }
         }
 
-        internal RouteScanner()
+        public RouteScanner()
         {
             _logger = GrapevineLogManager.GetCurrentClassLogger();
         }
@@ -129,7 +129,8 @@ namespace Grapevine.Server
 
             foreach (var assembly in Assemblies)
             {
-                // TODO: Includes/Excludes
+                if (ExcludedAssemblies.Contains(assembly)) continue;
+                if (IncludedAssemblies.Count > 0 && !IncludedAssemblies.Contains(assembly)) continue;
                 routes.AddRange(ScanAssembly(assembly, basePath));
             }
 
@@ -144,7 +145,8 @@ namespace Grapevine.Server
 
             foreach (var type in assembly.GetTypes().Where(t => t.IsRestResource()).OrderBy(t => t.Name))
             {
-                // TODO: Includes/Excludes
+                if (ExcludedTypes.Contains(type)) continue;
+                if (IncludedTypes.Count > 0 && !IncludedTypes.Contains(type)) continue;
                 routes.AddRange(ScanType(type, basePath));
             }
 
@@ -161,7 +163,6 @@ namespace Grapevine.Server
             var basepath = PathInfoService.GenerateBasePath(basePath, type);
             foreach (var methodInfo in type.GetMethods().Where(m => m.IsRestRoute()).OrderBy(m => m.Name))
             {
-                //TODO: Include/Exclude
                 routes.AddRange(ScanMethod(methodInfo, basepath));
             }
 
