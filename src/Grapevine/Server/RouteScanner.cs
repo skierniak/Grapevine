@@ -13,11 +13,6 @@ namespace Grapevine.Server
     public interface IRouteScanner
     {
         /// <summary>
-        /// Get or set a value to be used to include only RestResources with the specified scope when auto-scanning for routes.
-        /// </summary>
-        string Scope { get; set; }
-
-        /// <summary>
         /// Set a rule to exclude the specified assembly when auto-scanning for routes.
         /// </summary>
         /// <param name="assembly"></param>
@@ -74,8 +69,6 @@ namespace Grapevine.Server
 
     public class RouteScanner : IRouteScanner
     {
-        public string Scope { get; set; }
-
         protected internal readonly IList<Type> ExcludedTypes = new List<Type>();
         protected internal readonly IList<Type> IncludedTypes = new List<Type>();
 

@@ -16,15 +16,9 @@ namespace Grapevine.Server
         /// </summary>
         public string BasePath { get; set; }
 
-        /// <summary>
-        /// When set, will limit the accessibility of RestRoutes to Servers with the same Scope; defaults to no scope (an empty string).
-        /// </summary>
-        public string Scope { get; set; }
-
         public RestResource()
         {
             BasePath = string.Empty;
-            Scope = string.Empty;
         }
     }
 }

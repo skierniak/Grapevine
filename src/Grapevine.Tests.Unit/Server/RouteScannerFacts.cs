@@ -25,17 +25,6 @@ namespace Grapevine.Tests.Unit.Server
             );
         }
 
-        public class Scope
-        {
-            [Fact]
-            public void GetsAndSetsScope()
-            {
-                const string scope = "scope";
-                var scanner = new RouteScanner {Scope = scope};
-                scanner.Scope.ShouldBe(scope);
-            }
-        }
-
         public class Exclude
         {
             private readonly RouteScanner _scanner = new RouteScanner();

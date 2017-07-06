@@ -243,14 +243,13 @@ namespace Grapevine.Tests.Unit.Common
                 result.ShouldSatisfyAllConditions
                 (
                     () => result.ShouldNotBeNull(),
-                    () => result.BasePath.ShouldBe("something"),
-                    () => result.Scope.ShouldBe("otherthing")
+                    () => result.BasePath.ShouldBe("something")
                 );
             }
 
             public class NotARestResource{}
 
-            [RestResource(BasePath = "something", Scope = "otherthing")]
+            [RestResource(BasePath = "something")]
             public class ValidRestResource{}
         }
     }
