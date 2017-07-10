@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Grapevine.Common;
 using Grapevine.Core;
+using Grapevine.Core.Exceptions;
 using Grapevine.Server;
 using Grapevine.Tests.Sample;
 using Shouldly;
@@ -79,6 +81,121 @@ namespace Grapevine.Tests.Unit.Server
                     () => _scanner.ExcludedAssemblies.Count.ShouldBe(1),
                     () => _scanner.ExcludedAssemblies[0].ShouldBe(_assembly)
                 );
+            }
+        }
+
+        public class ImplementRoutesAs
+        {
+            [Fact]
+            public void ThrowsExceptionWhenRouteImplementationLacksExpectedConstructor()
+            {
+                Should.Throw<MissingConstructorException>(() => { (new RouteScanner()).ImplementRoutesAs<ImperfectRoute>(); });
+            }
+
+            [Fact]
+            public void CanSetIRouteImplementation()
+            {
+                var scanner = new RouteScanner();
+                scanner.ImplementRoutesAs<PerfectRoute>();
+                scanner.RouteImplementation.ShouldBe(typeof(PerfectRoute));
+            }
+
+            [Fact]
+            public void GeneratesRoutesAsSpecifiedImplementation()
+            {
+                var scanner = new RouteScanner();
+
+                var routesA = scanner.ScanMethod(GetType().GetMethod("SomeRoute"));
+                routesA.ShouldNotBeEmpty();
+                routesA[0].GetType().ShouldBe(typeof(Route));
+
+                scanner.ImplementRoutesAs<PerfectRoute>();
+
+                var routesB = scanner.ScanMethod(GetType().GetMethod("SomeRoute"));
+                routesB.ShouldNotBeEmpty();
+                routesB[0].GetType().ShouldBe(typeof(PerfectRoute));
+            }
+
+            [RestRoute]
+            public void SomeRoute(IHttpContext context) { }
+
+            public class PerfectRoute : IRoute
+            {
+                public Action<IHttpContext> Delegate { get; }
+                public string Description { get; set; }
+                public bool Enabled { get; set; }
+                public HttpMethod HttpMethod { get; }
+                public string Name { get; }
+                public string PathInfo { get; }
+                public Regex PathInfoPattern { get; }
+
+                public PerfectRoute(MethodInfo methodInfo, HttpMethod httpMethod, string pathInfo)
+                {
+                    HttpMethod = httpMethod;
+                    PathInfo = pathInfo;
+                }
+
+                public bool Matches(IHttpContext context)
+                {
+                    throw new NotImplementedException();
+                }
+
+                public IRoute MatchOn(string header, Regex pattern)
+                {
+                    throw new NotImplementedException();
+                }
+
+                public void Invoke(IHttpContext context)
+                {
+                    throw new NotImplementedException();
+                }
+            }
+
+            public class ImperfectRoute : IRoute
+            {
+                public Action<IHttpContext> Delegate { get; }
+                public string Description { get; set; }
+                public bool Enabled { get; set; }
+                public HttpMethod HttpMethod { get; }
+                public string Name { get; }
+                public string PathInfo { get; }
+                public Regex PathInfoPattern { get; }
+
+                public ImperfectRoute (MethodInfo methodInfo)
+                {
+                }
+
+                public ImperfectRoute(string pathInfo, MethodInfo methodInfo, HttpMethod httpMethod)
+                {
+                    HttpMethod = httpMethod;
+                    PathInfo = pathInfo;
+                }
+
+                public ImperfectRoute(MethodInfo methodInfo, string pathInfo, HttpMethod httpMethod)
+                {
+                    HttpMethod = httpMethod;
+                    PathInfo = pathInfo;
+                }
+
+                public ImperfectRoute(MethodInfo methodInfo, HttpMethod httpMethod, HttpMethod httpMethod2)
+                {
+                    HttpMethod = httpMethod;
+                }
+
+                public bool Matches(IHttpContext context)
+                {
+                    throw new NotImplementedException();
+                }
+
+                public IRoute MatchOn(string header, Regex pattern)
+                {
+                    throw new NotImplementedException();
+                }
+
+                public void Invoke(IHttpContext context)
+                {
+                    throw new NotImplementedException();
+                }
             }
         }
 

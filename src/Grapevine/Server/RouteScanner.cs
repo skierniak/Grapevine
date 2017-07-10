@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Grapevine.Common;
+using Grapevine.Core.Exceptions;
 using Grapevine.Core.Logging;
 
 namespace Grapevine.Server
@@ -65,6 +66,12 @@ namespace Grapevine.Server
         /// <param name="basePath"></param>
         /// <returns></returns>
         IList<IRoute> ScanMethod(MethodInfo methodInfo, string basePath);
+
+        /// <summary>
+        /// Provides the router with the concrete class to use when generating new routes.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        void ImplementRoutesAs<T>() where T : IRoute;
     }
 
     public class RouteScanner : IRouteScanner
@@ -78,6 +85,7 @@ namespace Grapevine.Server
         public static readonly List<Assembly> Assemblies;
 
         private readonly GrapevineLogger _logger;
+        protected internal Type RouteImplementation = typeof(Route);
 
         static RouteScanner()
         {
@@ -93,6 +101,28 @@ namespace Grapevine.Server
         public RouteScanner()
         {
             _logger = GrapevineLogManager.GetCurrentClassLogger();
+        }
+
+        public void ImplementRoutesAs<T>() where T : IRoute
+        {
+            var type = typeof(T);
+
+            var ctors = type.GetConstructors();
+
+
+            if (!type.GetConstructors().Any(c =>
+            {
+                var @params = c.GetParameters();
+
+                if (@params.Length != 3) return false;
+                if (@params[0].ParameterType != typeof(MethodInfo)) return false;
+                if (@params[1].ParameterType != typeof(HttpMethod)) return false;
+                if (@params[2].ParameterType != typeof(string)) return false;
+
+                return true;
+            })) throw new MissingConstructorException($"{type.FullName} does not contain an appropriate constructor. (Constructor must accept 3 arguments: ${typeof(MethodInfo).Name}, ${typeof(HttpMethod).Name}, and a string.)");
+
+            RouteImplementation = type;
         }
 
         public void Exclude(Assembly assembly)
@@ -172,7 +202,7 @@ namespace Grapevine.Server
             foreach (var attribute in methodInfo.GetCustomAttributes(true).Where(a => true).Cast<RestRoute>())
             {
                 var pathinfo = PathInfoService.GeneratePathInfo(attribute.PathInfo, basepath);
-                var route = new Route(methodInfo, attribute.HttpMethod, pathinfo);
+                var route = (IRoute) Activator.CreateInstance(RouteImplementation, methodInfo, attribute.HttpMethod, pathinfo);
                 _logger.Trace($"Generated route {route.Name}");
                 routes.Add(route);
             }
