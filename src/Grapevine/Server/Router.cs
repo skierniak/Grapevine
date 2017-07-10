@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using Grapevine.Common;
 using Grapevine.Core;
 using Grapevine.Core.Exceptions;
 using Grapevine.Core.Logging;
+using HttpStatusCode = Grapevine.Common.HttpStatusCode;
 
 namespace Grapevine.Server
 {
@@ -87,6 +89,9 @@ namespace Grapevine.Server
 
     public class Router : IRouter
     {
+        public static readonly string ConnectionAbortedMsg = "Connection aborted by client";
+        public static readonly string UnknownListenerExceptionMsg = "An error occured while attempting to respond to the request";
+
         protected internal readonly IList<IRoute> RegisteredRoutes = new List<IRoute>();
 
         public event RoutingEventHandler AfterRouting;
@@ -95,7 +100,7 @@ namespace Grapevine.Server
         public IRouteScanner Scanner { get; set; } = new RouteScanner();
         public IList<IRoute> RoutingTable => RegisteredRoutes.ToList().AsReadOnly();
 
-        protected internal readonly GrapevineLogger Logger = GrapevineLogManager.GetCurrentClassLogger();
+        protected internal GrapevineLogger Logger { get; set; } = GrapevineLogManager.GetCurrentClassLogger();
 
         public IRouter Import(IRouter router)
         {
@@ -130,37 +135,37 @@ namespace Grapevine.Server
 
             try
             {
-                //    if (context.Request.HttpMethod == HttpMethod.GET)
-                //    {
-                //        foreach (var folder in context.Server.PublicFolders)
-                //        {
-                //            folder.SendFile(context);
-                //            if (context.WasRespondedTo) return;
-                //        }
-                //    }
+                //if (context.Request.HttpMethod == HttpMethod.GET)
+                //{
+                    //foreach (var folder in context.Server.PublicFolders)
+                    //{
+                    //    folder.SendFile(context);
+                    //    if (context.WasRespondedTo) return;
+                    //}
+                //}
 
-                //    Route(context, RoutesFor(context));
+                Route(context, RoutesFor(context));
             }
             catch (Exception e)
             {
-                //    Logger.Log(new LogEvent { Exception = e, Level = LogLevel.Error, Message = e.Message });
-                //    if (context.Server.EnableThrowingExceptions) throw;
+                Logger.Error(e.Message, e);
+                //if (context.Server.EnableThrowingExceptions) throw;
 
-                //    if (context.WasRespondedTo) return;
+                if (context.WasRespondedTo) return;
 
-                //    if (e is NotFoundException)
-                //    {
-                //        context.Response.SendResponse(HttpStatusCode.NotFound, e.Message);
-                //        return;
-                //    }
+                if (e is NotFoundException)
+                {
+                    context.Response.SendResponse(HttpStatusCode.NotFound, e.Message);
+                    return;
+                }
 
-                //    if (e is NotImplementedException)
-                //    {
-                //        context.Response.SendResponse(HttpStatusCode.NotImplemented, e.Message);
-                //        return;
-                //    }
+                if (e is NotImplementedException)
+                {
+                    context.Response.SendResponse(HttpStatusCode.NotImplemented, e.Message);
+                    return;
+                }
 
-                //    context.Response.SendResponse(HttpStatusCode.InternalServerError, e);
+                context.Response.SendResponse(HttpStatusCode.InternalServerError, e);
             }
         }
 
@@ -190,8 +195,8 @@ namespace Grapevine.Server
             catch (HttpListenerException e)
             {
                 var msg = e.NativeErrorCode == 64
-                    ? "Connection aborted by client"
-                    : "An error occured while attempting to respond to the request";
+                    ? ConnectionAbortedMsg
+                    : UnknownListenerExceptionMsg;
                 Logger.Warn(msg, e, context.Request.Id);
             }
             finally
