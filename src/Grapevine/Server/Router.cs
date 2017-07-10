@@ -100,6 +100,7 @@ namespace Grapevine.Server
         public IRouter Import(IRouter router)
         {
             AppendRoutingTable(router.RoutingTable);
+            (router as Router)?.TransferEventHandlers(this);
             return this;
         }
 
@@ -206,6 +207,12 @@ namespace Grapevine.Server
         public IList<IRoute> RoutesFor(IHttpContext context)
         {
             return RegisteredRoutes.Where(r => r.Matches(context) && r.Enabled).ToList();
+        }
+
+        protected internal void TransferEventHandlers(Router router)
+        {
+            router.BeforeRouting += BeforeRouting;
+            router.AfterRouting += AfterRouting;
         }
 
         /// <summary>
