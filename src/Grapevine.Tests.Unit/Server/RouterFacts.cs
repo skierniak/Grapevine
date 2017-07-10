@@ -197,6 +197,7 @@ namespace Grapevine.Tests.Unit.Server
             [Fact]
             public void AppendsRoutesToRoutingTable()
             {
+                var route = new Grapevine.Server.Route(_type.GetMethod("RouteA"), HttpMethod.ALL, "");
                 _router.Scan();
                 _router.RegisteredRoutes.Count.ShouldBe(3);
             }
