@@ -50,7 +50,7 @@ namespace Grapevine.Core
 
     public class HttpRequest : IHttpRequest
     {
-        private HttpListenerRequest _request;
+        public HttpListenerRequest _request { get; protected internal set; }
 
         public ContentType ContentType { get; protected internal set; }
 

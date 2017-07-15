@@ -49,6 +49,9 @@
     <Compile Include="Common\NameValueCollectionExtensions.cs" />
     <Compile Include="Common\PortFinder.cs" />
     <Compile Include="Core\Exceptions\MissingConstructorException.cs" />
+    <Compile Include="Core\Exceptions\ServerStateException.cs" />
+    <Compile Include="Core\Exceptions\UnableToStartHostException.cs" />
+    <Compile Include="Core\Exceptions\UnableToStopHostException.cs" />
     <Compile Include="Core\IHttpResponseExtensions.cs" />
     <Compile Include="Core\Json\GrapevineJsonManager.cs" />
     <Compile Include="Core\Json\IGrapevineJsonProvider.cs" />

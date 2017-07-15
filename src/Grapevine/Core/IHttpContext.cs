@@ -26,9 +26,10 @@ namespace Grapevine.Core
 
         public bool WasRespondedTo => Response.ResponseSent;
 
-        protected internal HttpContext(HttpListenerContext httpListenerContext)
+        protected internal HttpContext(HttpListenerContext httpListenerContext, IRestServer server)
         {
             Advanced = httpListenerContext;
+            Server = server;
         }
     }
 }

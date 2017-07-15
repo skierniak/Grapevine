@@ -145,6 +145,7 @@ namespace Grapevine.Tests.Unit.Server
             {
                 public event RoutingEventHandler AfterRouting;
                 public event RoutingEventHandler BeforeRouting;
+
                 public IRouteScanner Scanner { get; set; }
                 public IList<IRoute> RoutingTable { get; } = new List<IRoute>();
                 public IRouter Import(IRouter router)

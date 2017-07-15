@@ -38,7 +38,7 @@ namespace Grapevine.Core
     {
         public static int DefaultHoursToExpire = 23;
 
-        public HttpListenerResponse Advanced { get; set; }
+        public HttpListenerResponse Advanced { get; protected internal set; }
 
         public Encoding ContentEncoding { get; set; }
 
