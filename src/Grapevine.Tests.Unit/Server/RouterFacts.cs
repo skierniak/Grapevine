@@ -303,14 +303,12 @@ namespace Grapevine.Tests.Unit.Server
         public class Scan
         {
             private readonly Type _type = typeof(TypeScannerA);
-            private readonly Assembly _assembly = AppDomain.CurrentDomain.GetAssemblies().First(x => x.GetName().Name == "Grapevine.Tests.Sample");
-
+            private readonly Assembly _assembly = typeof(TypeScannerA).Assembly;
             private readonly Router _router = new Router();
 
             [Fact]
             public void AppendsRoutesToRoutingTable()
             {
-                var route = new Route(_type.GetMethod("RouteA"), HttpMethod.ALL, "");
                 _router.Scan();
                 _router.RegisteredRoutes.Count.ShouldBe(3);
             }

@@ -259,8 +259,7 @@ namespace Grapevine.Tests.Unit.Server
         public class Scan
         {
             private readonly RouteScanner _scanner = new RouteScanner();
-            private readonly Type _type = typeof(TypeScannerC);
-            private readonly Assembly _assembly = AppDomain.CurrentDomain.GetAssemblies().First(x => x.GetName().Name == "Grapevine.Tests.Sample");
+            private readonly Assembly _assembly = typeof(TypeScannerC).Assembly;
 
             [Fact]
             public void ReturnsRoutes()
