@@ -40,7 +40,7 @@ namespace Grapevine.Tests.Unit.Server
             [Fact]
             public void AbsolutePathShouldNotChange()
             {
-                const string path = @"C:\temp";
+                const string path = @"C:\temp-5648-15";
 
                 var folder = new ContentFolder(path);
 

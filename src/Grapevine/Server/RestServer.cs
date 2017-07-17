@@ -60,6 +60,11 @@ namespace Grapevine.Server
         bool IsListening { get; }
 
         /// <summary>
+        /// Gets the instance of IHttpListener used by the server.
+        /// </summary>
+        IHttpListener Listener { get; }
+
+        /// <summary>
         /// Gets the prefix created by combining the Protocol, Host and Port properties into a scheme and authority.
         /// </summary>
         string ListenerPrefix { get; }
@@ -95,7 +100,7 @@ namespace Grapevine.Server
 
     public class RestServer : DynamicProperties, IRestServer
     {
-        public IHttpListener Advanced { get; set; }
+        public IHttpListener Listener { get; protected internal set; }
 
         protected UriBuilder UriBuilder = new UriBuilder("http", "localhost", 1234, "/");
         protected GrapevineLogger Logger = GrapevineLogManager.GetCurrentClassLogger();
@@ -115,7 +120,13 @@ namespace Grapevine.Server
 
         public RestServer()
         {
-            Advanced = new HttpListener(this);
+            Listener = new HttpListener(this);
+            Listening = new Thread(HandleRequests);
+        }
+
+        public RestServer(IHttpListener listener)
+        {
+            Listener = listener;
             Listening = new Thread(HandleRequests);
         }
 
@@ -123,12 +134,12 @@ namespace Grapevine.Server
             get { return UriBuilder.Host; }
             set
             {
-                if (Advanced.IsListening) throw new ServerStateException();
-                UriBuilder.Host = value;
+                if (IsListening) throw new ServerStateException();
+                UriBuilder.Host = value == "0.0.0.0" ? "+" : value.ToLower();
             }
         }
 
-        public bool IsListening => (Advanced != null && Advanced.IsListening);
+        public bool IsListening => (Listener != null && Listener.IsListening);
 
         public string ListenerPrefix => UriBuilder.ToString();
 
@@ -137,7 +148,7 @@ namespace Grapevine.Server
             get { return UriBuilder.Port.ToString(); }
             set
             {
-                if (Advanced.IsListening) throw new ServerStateException();
+                if (IsListening) throw new ServerStateException();
                 UriBuilder.Port = int.Parse(value);
             }
         }
@@ -149,7 +160,7 @@ namespace Grapevine.Server
             get { return UriBuilder.Scheme == UriScheme.Https.ToScheme(); }
             set
             {
-                if (Advanced.IsListening) throw new ServerStateException();
+                if (IsListening) throw new ServerStateException();
                 UriBuilder.Scheme = value ? UriScheme.Https.ToScheme() : UriScheme.Http.ToScheme();
             }
         }
@@ -157,7 +168,7 @@ namespace Grapevine.Server
         public void Dispose()
         {
             if (IsListening) Stop();
-            Advanced?.Close();
+            Listener?.Close();
         }
 
         public void Start()
@@ -171,9 +182,9 @@ namespace Grapevine.Server
                 OnBeforeStarting();
                 if (Router.RoutingTable.Count == 0) Router.Scan();
 
-                Advanced.Prefixes?.Clear();
-                Advanced.Prefixes?.Add(ListenerPrefix);
-                Advanced.Start();
+                Listener.Prefixes?.Clear();
+                Listener.Prefixes?.Add(ListenerPrefix);
+                Listener.Start();
 
                 if (!TestingMode) Listening.Start();
 
@@ -202,7 +213,7 @@ namespace Grapevine.Server
 
                 StopEvent.Set();
                 if (!TestingMode) Listening.Join();
-                Advanced.Stop();
+                Listener.Stop();
                 StopEvent.Close();
 
                 if (!IsListening) OnAfterStopping();
@@ -218,20 +229,20 @@ namespace Grapevine.Server
             }
         }
 
-        private void HandleRequests()
+        protected internal void HandleRequests()
         {
-            while (Advanced.IsListening)
+            while (Listener.IsListening)
             {
-                var context = Advanced.BeginGetContext(ContextReady, null);
+                var context = Listener.BeginGetContext(ContextReady, null);
                 if (0 == WaitHandle.WaitAny(new[] {StopEvent, context.AsyncWaitHandle})) return;
             }
         }
 
-        private void ContextReady(IAsyncResult result)
+        protected internal void ContextReady(IAsyncResult result)
         {
             try
             {
-                var context = Advanced.EndGetContext(result);
+                var context = Listener.EndGetContext(result);
                 ThreadPool.QueueUserWorkItem(Router.Route, context);
             }
             catch (ObjectDisposedException)
@@ -282,7 +293,7 @@ namespace Grapevine.Server
             if (exceptions.Count > 0) throw new AggregateException(exceptions);
         }
 
-        private List<Exception> InvokeServerEventHandlers(IEnumerable<ServerEventHandler> actions)
+        protected internal List<Exception> InvokeServerEventHandlers(IEnumerable<ServerEventHandler> actions)
         {
             var exceptions = new List<Exception>();
 

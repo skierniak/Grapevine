@@ -83,6 +83,7 @@ namespace Grapevine.Core
         public HttpListener(IRestServer server) : base()
         {
             Server = server;
+            Advanced = new System.Net.HttpListener();
         }
 
         public IAsyncResult BeginGetContext(AsyncCallback callback, object state)
