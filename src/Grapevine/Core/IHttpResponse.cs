@@ -86,6 +86,8 @@ namespace Grapevine.Core
             }
             */
 
+            if (ContentType.IsBinary()) Advanced.SendChunked = true;
+
             Advanced.ContentLength64 = contents.Length;
             Advanced.OutputStream.Write(contents, 0, contents.Length);
             Advanced.OutputStream.Close();
