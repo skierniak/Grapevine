@@ -311,10 +311,5 @@ namespace Grapevine.Server
 
             return exceptions;
         }
-
-        public static void LogToConsole()
-        {
-            GrapevineLogManager.LogToConsole();
-        }
     }
 }

@@ -86,5 +86,10 @@ namespace Grapevine.Core.Logging
         {
             Provider = new ConsoleLoggingProvider();
         }
+
+        public static void LogToConsole(GrapevineLogLevel level)
+        {
+            Provider = new ConsoleLoggingProvider(level);
+        }
     }
 }
