@@ -10,5 +10,7 @@ namespace Grapevine.Core.Exceptions
         public UnableToStartHostException(string message) : base(message) { }
 
         public UnableToStartHostException(string message, Exception inner) : base(message, inner) { }
+
+        public UnableToStartHostException(Type type, Exception inner = null) : base($"An error occured when trying to start the {type.FullName}", inner) { }
     }
 }

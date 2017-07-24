@@ -102,8 +102,9 @@ namespace Grapevine.Server
     {
         public IHttpListener Listener { get; protected internal set; }
 
+        public GrapevineLogger Logger { get; } = GrapevineLogManager.GetCurrentClassLogger();
+
         protected UriBuilder UriBuilder = new UriBuilder("http", "localhost", 1234, "/");
-        protected GrapevineLogger Logger = GrapevineLogManager.GetCurrentClassLogger();
         protected readonly ManualResetEvent StopEvent = new ManualResetEvent(false);
         protected readonly Thread Listening;
         protected internal bool IsStopping;
@@ -191,9 +192,17 @@ namespace Grapevine.Server
                 Logger.Trace($"Listening: {ListenerPrefix}");
                 if (IsListening) OnAfterStarting();
             }
+            catch (HttpListenerException hle)
+            {
+                var msg = hle.ErrorCode == 32
+                    ? $"Grapevine is unable to start because another process is already running on port {Port}"
+                    : hle.Message;
+
+                throw new UnableToStartHostException(msg, hle);
+            }
             catch (Exception e)
             {
-                throw new UnableToStartHostException($"An error occured when trying to start the {GetType().FullName}", e);
+                throw new UnableToStartHostException(GetType(), e);
             }
             finally
             {
