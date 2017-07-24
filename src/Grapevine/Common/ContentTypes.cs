@@ -1608,6 +1608,24 @@ namespace Grapevine.Common
         [ContentTypeMetadata(Value = "model/vnd.mts", IsBinary = true)]
         MTS,
 
+        [ContentTypeMetadata(Value = "multipart/alternative", IsText = true)]
+        MultipartAlternative,
+
+        [ContentTypeMetadata(Value = "multipart/encrypted", IsText = true)]
+        MultipartEncrypted,
+
+        [ContentTypeMetadata(Value = "multipart/form-data", IsText = true)]
+        MultipartFormData,
+
+        [ContentTypeMetadata(Value = "multipart/mixed", IsText = true)]
+        MultipartMixed,
+
+        [ContentTypeMetadata(Value = "multipart/related", IsText = true)]
+        MultipartRelated,
+
+        [ContentTypeMetadata(Value = "multipart/signed", IsText = true)]
+        MultipartSigned,
+
         [ContentTypeMetadata(Value = "application/vnd.musician", IsBinary = true)]
         MUS,
 
