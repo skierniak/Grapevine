@@ -86,7 +86,6 @@
     <Compile Include="Server\Route.cs" />
     <Compile Include="Server\Router.cs" />
     <Compile Include="Server\RouteScanner.cs" />
-    <Compile Include="Server\ServerSettings.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
