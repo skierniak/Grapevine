@@ -8,7 +8,7 @@ using HttpStatusCode = Grapevine.Common.HttpStatusCode;
 
 namespace Grapevine.Core
 {
-    public static class HttpResponseExtensions
+    public static class HttpResponseInterfaceExtensions
     {
         /// <summary>
         ///Sends a response and closes the response output using the specified status code as the response content.

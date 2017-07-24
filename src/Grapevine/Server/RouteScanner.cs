@@ -212,7 +212,7 @@ namespace Grapevine.Server
         }
     }
 
-    public static class IRouteScannerExtensions
+    public static class RouteScannerInterfaceExtensions
     {
         /// <summary>
         /// Set a rule to include the generic type when auto-scanning for routes.

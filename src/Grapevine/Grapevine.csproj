@@ -52,7 +52,7 @@
     <Compile Include="Core\Exceptions\ServerStateException.cs" />
     <Compile Include="Core\Exceptions\UnableToStartHostException.cs" />
     <Compile Include="Core\Exceptions\UnableToStopHostException.cs" />
-    <Compile Include="Core\IHttpResponseExtensions.cs" />
+    <Compile Include="Core\HttpResponseInterfaceExtensions.cs" />
     <Compile Include="Core\Json\GrapevineJsonManager.cs" />
     <Compile Include="Core\Json\IGrapevineJsonProvider.cs" />
     <Compile Include="Server\MethodInfoExtensions.cs" />

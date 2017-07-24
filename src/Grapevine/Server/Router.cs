@@ -261,7 +261,7 @@ namespace Grapevine.Server
         }
     }
 
-    public static class IRouterExtensions
+    public static class RouterInterfaceExtensions
     {
         /* Create extensions for:
          * Import
