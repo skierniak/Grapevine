@@ -106,10 +106,10 @@ namespace Grapevine.Server
         protected GrapevineLogger Logger = GrapevineLogManager.GetCurrentClassLogger();
         protected readonly ManualResetEvent StopEvent = new ManualResetEvent(false);
         protected readonly Thread Listening;
-        protected bool IsStopping;
-        protected bool IsStarting;
+        protected internal bool IsStopping;
+        protected internal bool IsStarting;
 
-        protected internal bool TestingMode = true;
+        protected internal bool TestingMode = false;
 
         public event ServerEventHandler AfterStarting;
         public event ServerEventHandler AfterStopping;
@@ -167,7 +167,7 @@ namespace Grapevine.Server
 
         public void Dispose()
         {
-            if (IsListening) Stop();
+            Stop();
             Listener?.Close();
         }
 
@@ -182,8 +182,8 @@ namespace Grapevine.Server
                 OnBeforeStarting();
                 if (Router.RoutingTable.Count == 0) Router.Scan();
 
-                Listener.Prefixes?.Clear();
-                Listener.Prefixes?.Add(ListenerPrefix);
+                Listener.Prefixes.Clear();
+                Listener.Prefixes.Add(ListenerPrefix);
                 Listener.Start();
 
                 if (!TestingMode) Listening.Start();
@@ -268,7 +268,7 @@ namespace Grapevine.Server
         protected internal void OnBeforeStarting()
         {
             if (BeforeStarting == null) return;
-            var exceptions = InvokeServerEventHandlers(BeforeStarting.GetInvocationList().Reverse().Cast<ServerEventHandler>());
+            var exceptions = InvokeServerEventHandlers(BeforeStarting.GetInvocationList().Cast<ServerEventHandler>());
             if (exceptions.Count > 0) throw new AggregateException(exceptions);
         }
 
@@ -282,7 +282,7 @@ namespace Grapevine.Server
         protected internal void OnBeforeStopping()
         {
             if (BeforeStopping == null) return;
-            var exceptions = InvokeServerEventHandlers(BeforeStopping.GetInvocationList().Reverse().Cast<ServerEventHandler>());
+            var exceptions = InvokeServerEventHandlers(BeforeStopping.GetInvocationList().Cast<ServerEventHandler>());
             if (exceptions.Count > 0) throw new AggregateException(exceptions);
         }
 
