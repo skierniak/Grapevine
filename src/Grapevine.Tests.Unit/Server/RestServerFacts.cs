@@ -23,7 +23,7 @@ namespace Grapevine.Tests.Unit.Server
 
             server.Dispose();
             listener.Received().Close();
-            stopped = false;
+            stopped.ShouldBeFalse();
         }
 
         [Fact]
@@ -36,7 +36,7 @@ namespace Grapevine.Tests.Unit.Server
             server.Listener = null;
 
             server.Dispose();
-            stopped = false;
+            stopped.ShouldBeFalse();
         }
 
         [Fact]
@@ -51,7 +51,7 @@ namespace Grapevine.Tests.Unit.Server
 
             server.Dispose();
             listener.Received().Close();
-            stopped = true;
+            stopped.ShouldBeTrue();
         }
 
         [Fact]

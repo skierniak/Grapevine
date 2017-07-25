@@ -134,7 +134,7 @@ namespace Grapevine.Server
 
             try
             {
-                //if (context.Request.HttpMethod == HttpMethod.GET)
+                //if (context.Advanced.HttpMethod == HttpMethod.GET)
                 //{
                     //foreach (var folder in context.Server.PublicFolders)
                     //{

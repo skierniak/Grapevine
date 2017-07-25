@@ -43,7 +43,6 @@ namespace Grapevine.Server
         /// <summary>
         /// Returns a value indicating that the referenced method can be used to create a Route object
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="method"></param>
         /// <param name="throwExceptionWhenFalse"></param>
         /// <returns></returns>

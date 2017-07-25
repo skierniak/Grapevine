@@ -12,8 +12,6 @@ namespace Grapevine.Core.Logging
         /// Constructs a new <see cref="ConsoleLoggingProvider"/>
         /// </summary>
         /// <param name="minLevel">Only messages of this level of higher will be logged</param>
-        /// <param name="printLevel">If true, will output the log level (e.g. WARN). Defaults to false.</param>
-        /// <param name="printRequestId">If true, will output the internal request id. Defaults to false.</param>
         public ConsoleLoggingProvider(GrapevineLogLevel minLevel = GrapevineLogLevel.Info)
         {
             _minLevel = minLevel;

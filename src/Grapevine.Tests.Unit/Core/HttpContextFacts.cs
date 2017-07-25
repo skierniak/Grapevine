@@ -3,7 +3,7 @@ using NSubstitute;
 using Shouldly;
 using Xunit;
 
-namespace Grapevine.Tests.Unit.Interfaces
+namespace Grapevine.Tests.Unit.Core
 {
     public class HttpContextFacts
     {

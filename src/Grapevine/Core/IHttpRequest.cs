@@ -8,12 +8,12 @@ namespace Grapevine.Core
     public interface IHttpRequest
     {
         /// <summary>
-        /// Gets the MIME type of the body data included in the request
-        /// </summary
+        /// Gets the MIME type of the body data included in the advanced
+        /// </summary>
         ContentType ContentType { get; }
 
         /// <summary>
-        /// Gets the collection of header name/value pairs sent in the request
+        /// Gets the collection of header name/value pairs sent in the advanced
         /// </summary>
         NameValueCollection Headers { get; }
 
@@ -23,12 +23,12 @@ namespace Grapevine.Core
         HttpMethod HttpMethod { get; }
 
         /// <summary>
-        /// A value that represents a unique identifier for this request
+        /// A value that represents a unique identifier for this advanced
         /// </summary>
         string Id { get; }
 
         /// <summary>
-        /// Gets a representation of the HttpMethod and PathInfo of the request
+        /// Gets a representation of the HttpMethod and PathInfo of the advanced
         /// </summary>
         string Name { get; }
 
@@ -43,14 +43,14 @@ namespace Grapevine.Core
         Dictionary<string, string> PathParameters { get; set; }
 
         /// <summary>
-        /// Gets the query string included in the request
+        /// Gets the query string included in the advanced
         /// </summary>
         NameValueCollection QueryString { get; }
     }
 
     public class HttpRequest : IHttpRequest
     {
-        public HttpListenerRequest _request { get; protected internal set; }
+        public HttpListenerRequest Advanced { get; protected internal set; }
 
         public ContentType ContentType { get; protected internal set; }
 
@@ -70,11 +70,11 @@ namespace Grapevine.Core
 
         protected internal HttpRequest(HttpListenerRequest request)
         {
-            _request = request;
+            Advanced = request;
 
-            PathInfo = _request.RawUrl.Split(new[] { '?' }, 2)[0];
-            ContentType = ContentTypes.FromString(_request.ContentType);
-            HttpMethod = HttpMethods.FromString(_request.HttpMethod);
+            PathInfo = Advanced.RawUrl.Split(new[] { '?' }, 2)[0];
+            ContentType = ContentTypes.FromString(Advanced.ContentType);
+            HttpMethod = HttpMethods.FromString(Advanced.HttpMethod);
         }
     }
 }
