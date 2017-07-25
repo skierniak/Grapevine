@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using Grapevine.Common;
 using Grapevine.Core;
 using Grapevine.Core.Exceptions;
 using Grapevine.Core.Logging;
@@ -248,7 +247,7 @@ namespace Grapevine.Server
         /// <param name="route"></param>
         protected internal void AppendRoutingTable(IRoute route)
         {
-            if (RegisteredRoutes.All(r => r.Name != route.Name)) RegisteredRoutes.Add(route);
+            if (RegisteredRoutes.All(r => !route.Equals(r))) RegisteredRoutes.Add(route);
         }
 
         /// <summary>

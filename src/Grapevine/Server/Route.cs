@@ -142,5 +142,27 @@ namespace Grapevine.Server
 
             Delegate.Invoke(context);
         }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is IRoute)) return false;
+            var route = (IRoute)obj;
+
+            if (Name != route.Name) return false;
+
+            if (!HttpMethod.IsEquivalentTo(route.HttpMethod)) return false;
+
+            return PathInfoPattern.IsMatch(route.PathInfo) || route.PathInfoPattern.IsMatch(PathInfo);
+        }
+
+        public override string ToString()
+        {
+            return $"{HttpMethod} {PathInfo} > {Name}";
+        }
+
+        public override int GetHashCode()
+        {
+            return ToString().GetHashCode();
+        }
     }
 }
