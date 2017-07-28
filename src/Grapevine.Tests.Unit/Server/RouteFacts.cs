@@ -6,6 +6,7 @@ using Grapevine.Common;
 using Grapevine.Core;
 using Grapevine.Server;
 using NSubstitute;
+using NSubstitute.Core;
 using Shouldly;
 using Xunit;
 
@@ -269,6 +270,128 @@ namespace Grapevine.Tests.Unit.Server
                     () => context.Request.PathParameters["rule"].ShouldNotBeNull(),
                     () => context.Request.PathParameters["rule"].ShouldBe("promote")
                 );
+            }
+        }
+
+        public class EqualsOverride
+        {
+            [Fact]
+            public void IsFalseWhenObjectIsNotRoute()
+            {
+                (new Route(context => { }, HttpMethod.ALL, string.Empty)).Equals(new object()).ShouldBeFalse();
+            }
+
+            [Fact]
+            public void IsFalseWhenMethodsAreDifferent()
+            {
+                Action<IHttpContext> func1 = ctx => { ctx.Response.SendResponse(HttpStatusCode.Ok); };
+                Action<IHttpContext> func2 = ctx => { ctx.Response.SendResponse(HttpStatusCode.Ok); };
+
+                var route1 = new Route(func1, HttpMethod.ALL, string.Empty);
+                var route2 = new Route(func2, HttpMethod.ALL, string.Empty);
+
+                route1.Equals(route2).ShouldBeFalse();
+            }
+
+            [Fact]
+            public void IsFalseWhenHttpMethodsAreNotEquivalent()
+            {
+                Action<IHttpContext> func = ctx => { ctx.Response.SendResponse(HttpStatusCode.Ok); };
+
+                var route1 = new Route(func, HttpMethod.GET, string.Empty);
+                var route2 = new Route(func, HttpMethod.POST, string.Empty);
+
+                route1.Equals(route2).ShouldBeFalse();
+            }
+
+            [Fact]
+            public void IsFalseWhenPathInfoPatternsDoNotMatch()
+            {
+                Action<IHttpContext> func = ctx => { ctx.Response.SendResponse(HttpStatusCode.Ok); };
+
+                var route1 = new Route(func, HttpMethod.ALL, "/user/[id]");
+                var route2 = new Route(func, HttpMethod.ALL, "/customer/[id]");
+
+                route1.Equals(route2).ShouldBeFalse();
+            }
+
+            [Fact]
+            public void IsTrueWhenHttpMethodNameAndPathInfoPatternsMatch()
+            {
+                Action<IHttpContext> func = ctx => { ctx.Response.SendResponse(HttpStatusCode.Ok); };
+
+                var route1 = new Route(func, HttpMethod.ALL, "/[action]/[id]");
+                var route2 = new Route(func, HttpMethod.ALL, "/customer/[id]");
+
+                route1.Equals(route2).ShouldBeTrue();
+            }
+
+            [Fact]
+            public void IsTrueWhenParentTypesAreDifferent()
+            {
+                Action<IHttpContext> func = ctx => { ctx.Response.SendResponse(HttpStatusCode.Ok); };
+
+                var route1 = new Route(func, HttpMethod.ALL, "/user/[id]");
+                var route2 = new QuasiRoute {Name = route1.Name, HttpMethod = route1.HttpMethod, PathInfo = route1.PathInfo, PathInfoPattern = route1.PathInfoPattern};
+
+                route1.Equals(route2).ShouldBeTrue();
+            }
+
+            public class QuasiRoute : IRoute
+            {
+                public Action<IHttpContext> Delegate { get; }
+                public string Description { get; set; }
+                public bool Enabled { get; set; }
+                public HttpMethod HttpMethod { get; set; }
+                public string Name { get; set; }
+                public string PathInfo { get; set; }
+                public Regex PathInfoPattern { get; set; }
+
+                public bool Matches(IHttpContext context)
+                {
+                    throw new NotImplementedException();
+                }
+
+                public IRoute MatchOn(string header, Regex pattern)
+                {
+                    throw new NotImplementedException();
+                }
+
+                public void Invoke(IHttpContext context)
+                {
+                    throw new NotImplementedException();
+                }
+            }
+        }
+
+        public class ToStringOverride
+        {
+            [Fact]
+            public void OverridesToString()
+            {
+                Action<IHttpContext> func = ctx => { ctx.Response.SendResponse(HttpStatusCode.Ok); };
+                const HttpMethod method = HttpMethod.ALL;
+                const string pathinfo = "/user/id";
+
+                var expected = $"{method} {pathinfo} > {func.Method.ReflectedType}.{func.Method.Name}";
+
+                var route1 = new Route(func, method, pathinfo);
+
+                route1.ToString().ShouldBe(expected);
+            }
+
+            [Fact]
+            public void OverridesGetHashCode()
+            {
+                Action<IHttpContext> func = ctx => { ctx.Response.SendResponse(HttpStatusCode.Ok); };
+                const HttpMethod method = HttpMethod.ALL;
+                const string pathinfo = "/user/id";
+
+                var expected = $"{method} {pathinfo} > {func.Method.ReflectedType}.{func.Method.Name}".GetHashCode();
+
+                var route1 = new Route(func, method, pathinfo);
+
+                route1.GetHashCode().ShouldBe(expected);
             }
         }
     }

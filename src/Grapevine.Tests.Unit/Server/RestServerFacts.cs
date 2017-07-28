@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using Grapevine.Common;
 using Grapevine.Core;
 using Grapevine.Core.Exceptions;
@@ -273,6 +274,18 @@ namespace Grapevine.Tests.Unit.Server
 
                 executed.ShouldBeFalse();
                 server.IsStarting.ShouldBeFalse();
+            }
+
+            [Fact(Skip = "Local only when running ArangoDB")]
+            public void ThrowsBetterExceptionMessageWhenPortIsInUse()
+            {
+                const string port = "8529";
+
+                using (var testServer = new RestServer { Port = port })
+                {
+                    var ushe = Should.Throw<UnableToStartHostException>(() => { testServer.Start(); });
+                    ushe.Message.ShouldBe($"Grapevine is unable to start because another process is already running on port {port}");
+                }
             }
         }
 
