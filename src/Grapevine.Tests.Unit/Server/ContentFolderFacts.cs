@@ -539,7 +539,7 @@ namespace Grapevine.Tests.Unit.Server
             }
 
             [Fact]
-            public void ThrowsExceptionWhenFileShouldExist()
+            public void SetsStatusCodeToNotFoundWhenFileShouldExist()
             {
                 var responded = new ManualResetEvent(false);
                 var prefix = GenerateUniqueString();
@@ -547,7 +547,8 @@ namespace Grapevine.Tests.Unit.Server
 
                 _folder.Prefix = prefix;
 
-                Should.Throw<FileNotFoundException>(() => _folder.SendFile(context));
+                _folder.SendFile(context);
+                context.Response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
             }
         }
 

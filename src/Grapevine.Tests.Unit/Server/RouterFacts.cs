@@ -9,6 +9,7 @@ using Grapevine.Core.Exceptions;
 using Grapevine.Core.Logging;
 using Grapevine.Server;
 using Grapevine.Tests.Sample;
+using Grapevine.Tests.Unit.Stubs;
 using NSubstitute;
 using Shouldly;
 using Xunit;
@@ -320,9 +321,12 @@ namespace Grapevine.Tests.Unit.Server
 
                 _router.Scan();
 
-                _router.RegisteredRoutes[0].Name.ShouldBe("Grapevine.Tests.Sample.TypeScannerA.RouteA");
-                _router.RegisteredRoutes[1].Name.ShouldBe("Grapevine.Tests.Sample.TypeScannerB.RouteA");
-                _router.RegisteredRoutes[2].Name.ShouldBe("Grapevine.Tests.Sample.TypeScannerC.RouteA");
+                _router.ShouldSatisfyAllConditions(
+                    () => _router.RegisteredRoutes.Count.ShouldBe(3),
+                    () => _router.RegisteredRoutes[0].Name.ShouldBe("Grapevine.Tests.Sample.TypeScannerA.RouteA"),
+                    () => _router.RegisteredRoutes[1].Name.ShouldBe("Grapevine.Tests.Sample.TypeScannerB.RouteA"),
+                    () => _router.RegisteredRoutes[2].Name.ShouldBe("Grapevine.Tests.Sample.TypeScannerC.RouteA")
+                );
 
                 _router.RegisteredRoutes.Count.ShouldBe(3);
             }
@@ -331,31 +335,71 @@ namespace Grapevine.Tests.Unit.Server
         public class RouteContext
         {
             [Fact]
-            public void ThrowsExceptionWhenRoutingTableIsNullOrEmpty()
+            public void ReturnsWithNotFoundStatusCodeWhenRoutingListIsNull()
             {
-                var router = new Router();
-                var context = Substitute.For<IHttpContext>();
+                var executed = false;
+                var context = new StubContext();
 
-                Should.Throw<RouteNotFoundException>(() => { router.Route(context, null); });
-                Should.Throw<RouteNotFoundException>(() => { router.Route(context, new List<IRoute>()); });
+                var router = new Router();
+                router.BeforeRouting += ctx => { executed = true; };
+
+                router.Route(context, null);
+
+                executed.ShouldBeFalse();
+                context.Response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
             }
 
             [Fact]
-            public void ThrowsExceptionWhenNoRoutesSendResponse()
+            public void ReturnsWithNotFoundStatusCodeWhenRoutingListIsEmpty()
             {
-                var routeExecuted = false;
+                var executed = false;
+                var context = new StubContext();
 
-                var context = Substitute.For<IHttpContext>();
+                var router = new Router();
+                router.BeforeRouting += ctx => { executed = true; };
 
-                Should.Throw<RouteNotFoundException>(() =>
-                {
-                    new Router().Route(context, new List<IRoute>
-                    {
-                        new Route(ctx => { routeExecuted = true; }, HttpMethod.ALL, "")
-                    });
-                });
+                router.Route(context, new List<IRoute>());
 
-                routeExecuted.ShouldBeTrue();
+                executed.ShouldBeFalse();
+                context.Response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
+            }
+
+            [Fact]
+            public void ExecutesBeforeAndAfterEventHandlers()
+            {
+                var results = new List<string>();
+                var expected = new List<string>{ "B.1", "B.2", "R.1", "A.2", "A.1" };
+
+                var context = new StubContext();
+
+                var router = new Router();
+                router.BeforeRouting += ctx => { results.Add("B.1"); };
+                router.BeforeRouting += ctx => { results.Add("B.2"); };
+                router.AfterRouting += ctx => { results.Add("A.1"); };
+                router.AfterRouting += ctx => { results.Add("A.2"); };
+
+                router.Route(context, new List<IRoute> { new Route(ctx => { results.Add("R.1"); }, HttpMethod.ALL, string.Empty) });
+
+                results.ShouldBe(expected);
+            }
+
+            [Fact]
+            public void ExecutesBeforeAndAfterEventHandlersWhenExecptionThrown()
+            {
+                var results = new List<string>();
+                var expected = new List<string> { "B.1", "B.2", "A.2", "A.1" };
+
+                var context = new StubContext();
+
+                var router = new Router();
+                router.BeforeRouting += ctx => { results.Add("B.1"); };
+                router.BeforeRouting += ctx => { results.Add("B.2"); };
+                router.AfterRouting += ctx => { results.Add("A.1"); };
+                router.AfterRouting += ctx => { results.Add("A.2"); };
+
+                Should.Throw<Exception>(() => router.Route(context, new List<IRoute> { new Route(ctx => { throw new Exception(); }, HttpMethod.ALL, string.Empty) }));
+
+                results.ShouldBe(expected);
             }
 
             [Fact]
@@ -364,13 +408,13 @@ namespace Grapevine.Tests.Unit.Server
                 var route1Executed = false;
                 var route2Executed = false;
 
-                var context = Substitute.For<IHttpContext>();
+                var context = new StubContext();
 
                 new Router().Route(context, new List<IRoute>
                 {
                     new Route(ctx => { route1Executed = true; }, HttpMethod.ALL, "") {Enabled = false},
                     new Route(ctx => { route2Executed = true;  }, HttpMethod.ALL, ""),
-                    new Route(ctx => { ctx.WasRespondedTo.Returns(true);  }, HttpMethod.ALL, "")
+                    new Route(ctx => { ctx.Response.ResponseSent = true;  }, HttpMethod.ALL, "")
                 });
 
                 route1Executed.ShouldBeFalse();
@@ -378,41 +422,79 @@ namespace Grapevine.Tests.Unit.Server
             }
 
             [Fact]
-            public void HasCorrectExceptionMessageWhenHttpListenerExceptionIsThrownBecauseConnectionIsAborted()
+            public void StopsRoutingWhenResponseIsSent()
             {
-                var logger = InMemoryLogger.GetLogger("chump1");
-                var router = new Router() { Logger = logger };
+                var route1Executed = false;
+                var route2Executed = false;
 
-                Should.Throw<RouteNotFoundException>(() =>
+                var context = new StubContext();
+
+                new Router().Route(context, new List<IRoute>
                 {
-                    router.Route(Substitute.For<IHttpContext>(),
-                        new List<IRoute>
-                        {
-                            new Route(ctx => { throw new HttpListenerException(64); }, HttpMethod.ALL, "")
-                        });
+                    new Route(ctx => { route1Executed = true;
+                        ctx.Response.ResponseSent = true;
+                    }, HttpMethod.ALL, ""),
+                    new Route(ctx => { route2Executed = true;  }, HttpMethod.ALL, "")
                 });
 
-                logger.Logs.Count.ShouldBe(3);
-                logger.Logs[1].Message.ShouldBe(Router.ConnectionAbortedMsg);
+                route1Executed.ShouldBeTrue();
+                route2Executed.ShouldBeFalse();
+            }
+
+            [Fact]
+            public void StopsRoutingWhenStatusCodeChanges()
+            {
+                var route1Executed = false;
+                var route2Executed = false;
+
+                var context = new StubContext();
+
+                new Router().Route(context, new List<IRoute>
+                {
+                    new Route(ctx => { route1Executed = true;
+                        ctx.Response.StatusCode = HttpStatusCode.NotAcceptable;
+                    }, HttpMethod.ALL, ""),
+                    new Route(ctx => { route2Executed = true;  }, HttpMethod.ALL, "")
+                });
+
+                route1Executed.ShouldBeTrue();
+                route2Executed.ShouldBeFalse();
+            }
+
+            [Fact]
+            public void HasCorrectExceptionMessageWhenHttpListenerExceptionIsThrownBecauseConnectionIsAborted()
+            {
+                var logger = InMemoryLogger.GetLogger(Guid.NewGuid().ToString());
+                var router = new Router { Logger = logger };
+
+                router.Route(new StubContext(),
+                    new List<IRoute>
+                    {
+                        new Route(ctx => { throw new HttpListenerException(64); }, HttpMethod.ALL, "")
+                    });
+
+                logger.Logs.ShouldSatisfyAllConditions(
+                    () => logger.Logs.Count.ShouldBe(3),
+                    () => logger.Logs[1].Message.ShouldBe(Router.ConnectionAbortedMsg)
+                );
             }
 
             [Fact]
             public void HasCorrectExceptionMessageWhenHttpListenerExceptionIsThrownForOtherReasons()
             {
-                var logger = InMemoryLogger.GetLogger("chump2");
-                var router = new Router() { Logger = logger };
+                var logger = InMemoryLogger.GetLogger(Guid.NewGuid().ToString());
+                var router = new Router { Logger = logger };
 
-                Should.Throw<RouteNotFoundException>(() =>
-                {
-                    router.Route(Substitute.For<IHttpContext>(),
-                        new List<IRoute>
-                        {
-                            new Route(ctx => { throw new HttpListenerException(32); }, HttpMethod.ALL, "")
-                        });
-                });
+                router.Route(new StubContext(),
+                    new List<IRoute>
+                    {
+                        new Route(ctx => { throw new HttpListenerException(32); }, HttpMethod.ALL, "")
+                    });
 
-                logger.Logs.Count.ShouldBe(3);
-                logger.Logs[1].Message.ShouldBe(Router.UnknownListenerExceptionMsg);
+                logger.Logs.ShouldSatisfyAllConditions(
+                    () => logger.Logs.Count.ShouldBe(3),
+                    () => logger.Logs[1].Message.ShouldBe(Router.UnknownListenerExceptionMsg)
+                );
             }
         }
 
@@ -428,106 +510,108 @@ namespace Grapevine.Tests.Unit.Server
             [Fact]
             public void RoutesContext()
             {
-                var response = Substitute.For<IHttpResponse>();
+                var response = new StubResponse();
 
-                var context = Substitute.For<IHttpContext>();
-                context.Response.Returns(response);
-                context.Request.HttpMethod.Returns(HttpMethod.POST);
-                context.Request.PathInfo.Returns("/some/url");
+                var request = new StubRequest
+                {
+                    HttpMethod = HttpMethod.POST,
+                    PathInfo = "/some/url"
+                };
+
+                var context = new StubContext {Request = request, Response = response};
 
                 var router = new Router().Register(new Route(ctx =>
                 {
-                    response.StatusCode = HttpStatusCode.Ok;
-                    context.WasRespondedTo.Returns(true);
+                    response.SendResponse(null);
                 }, HttpMethod.ALL, ""));
 
                 router.Route(context);
                 response.StatusCode.ShouldBe(HttpStatusCode.Ok);
             }
 
-            [Fact]
-            public void DoesNotThrowExceptionWhenResponseHasBeenSent()
-            {
-                var response = Substitute.For<IHttpResponse>();
+            //[Fact]
+            //public void DoesNotThrowExceptionWhenResponseHasBeenSent()
+            //{
+            //    var response = Substitute.For<IHttpResponse>();
 
-                var context = Substitute.For<IHttpContext>();
-                context.Response.Returns(response);
-                context.Request.HttpMethod.Returns(HttpMethod.POST);
-                context.Request.PathInfo.Returns("/some/url");
+            //    var context = Substitute.For<IHttpContext>();
+            //    context.Response.Returns(response);
+            //    context.Request.HttpMethod.Returns(HttpMethod.POST);
+            //    context.Request.PathInfo.Returns("/some/url");
 
-                var router = new Router().Register(new Route(ctx =>
-                {
-                    response.StatusCode = HttpStatusCode.Ok;
-                    context.WasRespondedTo.Returns(true);
-                    throw new Exception();
-                }, HttpMethod.ALL, ""));
+            //    var router = new Router().Register(new Route(ctx =>
+            //    {
+            //        response.StatusCode.Returns(HttpStatusCode.Ok);
+            //        context.WasRespondedTo.Returns(true);
+            //        throw new Exception();
+            //    }, HttpMethod.ALL, ""));
 
-                router.Route(context);
-                response.StatusCode.ShouldBe(HttpStatusCode.Ok);
-            }
+            //    router.Route(context);
+            //    response.StatusCode.ShouldBe(HttpStatusCode.Ok);
+            //}
 
-            [Fact]
-            public void SendsNotFoundResponse()
-            {
-                var called = false;
+            //[Fact]
+            //public void SendsNotFoundResponse()
+            //{
+            //    var called = false;
 
-                var response = Substitute.For<IHttpResponse>();
-                response.ContentEncoding.Returns(Encoding.ASCII);
-                response.When(x => x.SendResponse(Arg.Any<byte[]>())).Do(info => { called = true; });
+            //    var response = Substitute.For<IHttpResponse>();
+            //    response.ContentEncoding.Returns(Encoding.ASCII);
+            //    response.When(x => x.SendResponse(Arg.Any<byte[]>())).Do(info => { called = true; });
 
-                var context = Substitute.For<IHttpContext>();
-                context.Response.Returns(response);
-                context.Request.HttpMethod.Returns(HttpMethod.POST);
-                context.Request.PathInfo.Returns("/some/url");
+            //    var context = Substitute.For<IHttpContext>();
+            //    context.Response.Returns(response);
+            //    context.Request.HttpMethod.Returns(HttpMethod.POST);
+            //    context.Request.PathInfo.Returns("/some/url");
 
-                var router = new Router().Register(new Route(ctx => { }, HttpMethod.ALL, ""));
-                router.Route(context);
+            //    var router = new Router().Register(new Route(ctx => { }, HttpMethod.ALL, ""));
+            //    router.Route(context);
 
-                response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
-                called.ShouldBeTrue();
-            }
+            //    response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
+            //    called.ShouldBeTrue();
+            //}
 
-            [Fact]
-            public void SendsNotImplementedResponse()
-            {
-                var called = false;
+            //[Fact]
+            //public void SendsNotImplementedResponse()
+            //{
+            //    var called = false;
 
-                var response = Substitute.For<IHttpResponse>();
-                response.ContentEncoding.Returns(Encoding.ASCII);
-                response.When(x => x.SendResponse(Arg.Any<byte[]>())).Do(info => { called = true; });
+            //    var response = Substitute.For<IHttpResponse>();
+            //    response.ContentEncoding.Returns(Encoding.ASCII);
+            //    response.When(x => x.SendResponse(Arg.Any<byte[]>())).Do(info => { called = true; });
 
-                var context = Substitute.For<IHttpContext>();
-                context.Response.Returns(response);
-                context.Request.HttpMethod.Returns(HttpMethod.POST);
-                context.Request.PathInfo.Returns("/some/url");
+            //    var context = Substitute.For<IHttpContext>();
+            //    context.Response.Returns(response);
+            //    context.Request.HttpMethod.Returns(HttpMethod.POST);
+            //    context.Request.PathInfo.Returns("/some/url");
 
-                var router = new Router().Register(new Route(ctx => { throw new NotImplementedException(); }, HttpMethod.ALL, ""));
-                router.Route(context);
+            //    var router = new Router().Register(new Route(ctx => { throw new NotImplementedException(); }, HttpMethod.ALL, ""));
+            //    router.Route(context);
 
-                response.StatusCode.ShouldBe(HttpStatusCode.NotImplemented);
-                called.ShouldBeTrue();
-            }
+            //    response.StatusCode.ShouldBe(HttpStatusCode.NotImplemented);
+            //    called.ShouldBeTrue();
+            //}
 
-            [Fact]
-            public void SendsInternalServerError()
-            {
-                var called = false;
+            //[Fact]
+            //public void SendsInternalServerError()
+            //{
+            //    var called = false;
 
-                var response = Substitute.For<IHttpResponse>();
-                response.ContentEncoding.Returns(Encoding.ASCII);
-                response.When(x => x.SendResponse(Arg.Any<byte[]>())).Do(info => { called = true; });
+            //    var response = Substitute.For<IHttpResponse>();
+            //    response.ContentEncoding.Returns(Encoding.ASCII);
+            //    response.When(x => x.SendResponse(Arg.Any<byte[]>())).Do(info => { called = true; });
 
-                var context = Substitute.For<IHttpContext>();
-                context.Response.Returns(response);
-                context.Request.HttpMethod.Returns(HttpMethod.POST);
-                context.Request.PathInfo.Returns("/some/url");
+            //    var context = Substitute.For<IHttpContext>();
+            //    context.Response.Returns(response);
+            //    context.Request.HttpMethod.Returns(HttpMethod.POST);
+            //    context.Request.PathInfo.Returns("/some/url");
 
-                var router = new Router().Register(new Route(ctx => { throw new Exception(); }, HttpMethod.ALL, ""));
-                router.Route(context);
+            //    var router = new Router().Register(new Route(ctx => { throw new Exception(); }, HttpMethod.ALL, ""));
+            //    router.Route(context);
 
-                response.StatusCode.ShouldBe(HttpStatusCode.InternalServerError);
-                called.ShouldBeTrue();
-            }
+            //    response.StatusCode.ShouldBe(HttpStatusCode.InternalServerError);
+            //    called.ShouldBeTrue();
+            //}
         }
 
         public class RoutesFor
@@ -571,6 +655,107 @@ namespace Grapevine.Tests.Unit.Server
                 _router.Register(_route);
 
                 _router.RoutesFor(Substitute.For<IHttpContext>()).Count.ShouldBe(0);
+            }
+        }
+
+        public class ErrorHandling
+        {
+            [Fact]
+            public void RespondsWithInternalServerErrorByDefault()
+            {
+                var response = Substitute.For<IHttpResponse>();
+                response.StatusCode.Returns(HttpStatusCode.Ok);
+
+                var context = Substitute.For<IHttpContext>();
+                context.Response.Returns(response);
+
+                var router = new Router();
+
+                router.ErrorHandling(context);
+
+                response.Received().SendResponse(HttpStatusCode.InternalServerError);
+            }
+
+            [Fact]
+            public void InvokesGlobalErrorHandler()
+            {
+                const HttpStatusCode status = HttpStatusCode.NotAcceptable;
+                var result = false;
+
+                var response = Substitute.For<IHttpResponse>();
+                response.StatusCode.Returns(status);
+
+                var context = Substitute.For<IHttpContext>();
+                context.Response.Returns(response);
+
+                Router.GlobalErrorHandlers[status] = ctx => { result = true; };
+
+                var router = new Router();
+                router.ErrorHandling(context);
+
+                result.ShouldBeTrue();
+            }
+
+            [Fact]
+            public void InvokesLocalErrorHandler()
+            {
+                const HttpStatusCode status = HttpStatusCode.ImATeapot;
+                var result = false;
+
+                var response = Substitute.For<IHttpResponse>();
+                response.StatusCode.Returns(status);
+
+                var context = Substitute.For<IHttpContext>();
+                context.Response.Returns(response);
+
+                var router = new Router {LocalErrorHandlers = {[status] = ctx => { result = true; }}};
+
+                router.ErrorHandling(context);
+
+                result.ShouldBeTrue();
+            }
+
+            [Fact]
+            public void InvokesLocalOverGlobalErrorHandler()
+            {
+                const HttpStatusCode status = HttpStatusCode.AlreadyReported;
+                var local = false;
+                var global = false;
+
+                var response = Substitute.For<IHttpResponse>();
+                response.StatusCode.Returns(status);
+
+                var context = Substitute.For<IHttpContext>();
+                context.Response.Returns(response);
+
+                Router.GlobalErrorHandlers.Add(status, ctx => { global = true; });
+
+                var router = new Router();
+                router.LocalErrorHandlers.Add(status, ctx => { local = true; });
+
+                router.ErrorHandling(context);
+
+                local.ShouldBeTrue();
+                global.ShouldBeFalse();
+            }
+
+            [Fact]
+            public void DoesNotRespondWhenAlreadyRespondedTo()
+            {
+                const HttpStatusCode status = HttpStatusCode.BadGateway;
+
+                var response = Substitute.For<IHttpResponse>();
+                response.StatusCode.Returns(status);
+
+                var context = Substitute.For<IHttpContext>();
+                context.Response.Returns(response);
+
+                var router = new Router();
+                router.LocalErrorHandlers.Add(status, ctx => { context.WasRespondedTo.Returns(true); });
+
+                router.ErrorHandling(context);
+
+                response.DidNotReceive().SendResponse(status);
             }
         }
 

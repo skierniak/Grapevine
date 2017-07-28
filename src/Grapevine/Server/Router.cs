@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using Grapevine.Common;
 using Grapevine.Core;
 using Grapevine.Core.Exceptions;
 using Grapevine.Core.Logging;
@@ -88,6 +89,12 @@ namespace Grapevine.Server
 
     public class Router : IRouter
     {
+        public static Dictionary<HttpStatusCode, Action<IHttpContext>> GlobalErrorHandlers =
+            new Dictionary<HttpStatusCode, Action<IHttpContext>>();
+
+        public Dictionary<HttpStatusCode, Action<IHttpContext>> LocalErrorHandlers =
+            new Dictionary<HttpStatusCode, Action<IHttpContext>>();
+
         public static readonly string ConnectionAbortedMsg = "Connection aborted by client";
         public static readonly string UnknownListenerExceptionMsg = "An error occured while attempting to respond to the request";
 
@@ -134,43 +141,32 @@ namespace Grapevine.Server
 
             try
             {
-                //if (context.Advanced.HttpMethod == HttpMethod.GET)
-                //{
-                    //foreach (var folder in context.Server.PublicFolders)
-                    //{
-                    //    folder.SendFile(context);
-                    //    if (context.WasRespondedTo) return;
-                    //}
-                //}
+                if (context.Request.HttpMethod == HttpMethod.GET)
+                {
+                    foreach (var folder in context.Server.ContentFolders)
+                    {
+                        folder.SendFile(context);
+                        if (context.WasRespondedTo) return;
+                    }
+                }
 
-                Route(context, RoutesFor(context));
+                if (context.Response.StatusCode == HttpStatusCode.Ok) Route(context, RoutesFor(context));
             }
             catch (Exception e)
             {
                 Logger.Error(e.Message, e);
-                //if (context.Server.EnableThrowingExceptions) throw;
-
-                if (context.WasRespondedTo) return;
-
-                if (e is NotFoundException)
-                {
-                    context.Response.SendResponse(HttpStatusCode.NotFound, e.Message);
-                    return;
-                }
-
-                if (e is NotImplementedException)
-                {
-                    context.Response.SendResponse(HttpStatusCode.NotImplemented, e.Message);
-                    return;
-                }
-
-                context.Response.SendResponse(HttpStatusCode.InternalServerError, e);
             }
+
+            if (!context.WasRespondedTo) ErrorHandling(context);
         }
 
         public void Route(IHttpContext context, IList<IRoute> routing)
         {
-            if (routing == null || !routing.Any()) throw new RouteNotFoundException(context.Request.HttpMethod, context.Request.PathInfo);
+            if (routing == null || !routing.Any())
+            {
+                context.Response.StatusCode = HttpStatusCode.NotFound;
+                return;
+            }
 
             var total = routing.Count;
             var counter = 0;
@@ -183,12 +179,12 @@ namespace Grapevine.Server
 
                 foreach (var route in routing.Where(route => route.Enabled))
                 {
+                    if (context.WasRespondedTo || context.Response.StatusCode != HttpStatusCode.Ok) break;
+
                     counter++;
                     route.Invoke(context);
 
                     Logger.Trace($"{counter}/{total} {route.Name}", context.Request.Id);
-
-                    if (context.WasRespondedTo) break;
                 }
             }
             catch (HttpListenerException e)
@@ -203,9 +199,6 @@ namespace Grapevine.Server
                 OnAfterRouting(context);
                 Logger.Trace($"{counter} of {total} routes invoked", context.Request.Id);
             }
-
-            if (!context.WasRespondedTo)
-                throw new RouteNotFoundException(context.Request.HttpMethod, context.Request.PathInfo);
         }
 
         public IList<IRoute> RoutesFor(IHttpContext context)
@@ -217,6 +210,25 @@ namespace Grapevine.Server
         {
             router.BeforeRouting += BeforeRouting;
             router.AfterRouting += AfterRouting;
+        }
+
+        protected internal void ErrorHandling(IHttpContext context)
+        {
+            if (context.Response.StatusCode == HttpStatusCode.Ok)
+                context.Response.StatusCode = HttpStatusCode.InternalServerError;
+
+            var action = LocalErrorHandlers.ContainsKey(context.Response.StatusCode)
+                ? LocalErrorHandlers[context.Response.StatusCode]
+                : GlobalErrorHandlers.ContainsKey(context.Response.StatusCode)
+                    ? GlobalErrorHandlers[context.Response.StatusCode]
+                    : null;
+
+            action?.Invoke(context);
+
+            if (action == null || !context.WasRespondedTo)
+            {
+                context.Response.SendResponse(context.Response.StatusCode);
+            }
         }
 
         /// <summary>

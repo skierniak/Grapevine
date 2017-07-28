@@ -143,13 +143,14 @@ namespace Grapevine.Server
                     }
                 }
 
+                context.Response.StatusCode = HttpStatusCode.Ok;
                 context.Response.ContentType = ContentTypes.FromExtension(filepath);
                 context.Response.SendResponse(File.ReadAllBytes(filepath));
             }
 
             if (!string.IsNullOrWhiteSpace(Prefix) && context.Request.PathInfo.StartsWith(Prefix) && !context.WasRespondedTo)
             {
-                throw new FileNotFoundException(context.Request.PathInfo);
+                context.Response.StatusCode = HttpStatusCode.NotFound;
             }
         }
 

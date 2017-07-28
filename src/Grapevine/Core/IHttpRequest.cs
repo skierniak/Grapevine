@@ -75,6 +75,8 @@ namespace Grapevine.Core
             PathInfo = Advanced.RawUrl.Split(new[] { '?' }, 2)[0];
             ContentType = ContentTypes.FromString(Advanced.ContentType);
             HttpMethod = HttpMethods.FromString(Advanced.HttpMethod);
+
+            Name = $"{HttpMethod} {PathInfo}";
         }
     }
 }

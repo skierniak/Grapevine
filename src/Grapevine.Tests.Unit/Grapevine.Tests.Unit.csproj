@@ -92,6 +92,7 @@
     <Compile Include="Server\RouteFacts.cs" />
     <Compile Include="Server\RouterFacts.cs" />
     <Compile Include="Server\RouteScannerFacts.cs" />
+    <Compile Include="Stubs\StubContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
