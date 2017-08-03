@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using Grapevine.Common;
 using Grapevine.Core;
-using Grapevine.Core.Exceptions;
 using Grapevine.Core.Logging;
 using HttpStatusCode = Grapevine.Common.HttpStatusCode;
 
