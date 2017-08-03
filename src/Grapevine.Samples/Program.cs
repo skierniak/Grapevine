@@ -7,10 +7,12 @@ namespace Grapevine.Samples
     {
         public static void Main(string[] args)
         {
-            GrapevineLogManager.Provider = new NLogLoggingProvider();
+            //GrapevineLogManager.Provider = new NLogLoggingProvider();
+            GrapevineLogManager.LogToConsole();
 
-            using (var server = new RestServer())
-            {
+            var server = new RestServer();
+            //using (var server = new RestServer())
+            //{
                 server.BeforeStarting += _ => { (_ as RestServer)?.Logger.Info("Starting Server"); };
                 server.AfterStarting += _ => { (_ as RestServer)?.Logger.Info("Server Started"); };
                 server.BeforeStopping += _ => { (_ as RestServer)?.Logger.Info("Stopping Server"); };
@@ -20,8 +22,8 @@ namespace Grapevine.Samples
 
                 server.Start();
                 System.Console.ReadLine();
-                server.Stop();
-            }
+                //server.Stop();
+            //}
         }
     }
 }

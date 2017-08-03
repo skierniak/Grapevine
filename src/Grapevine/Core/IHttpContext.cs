@@ -29,6 +29,8 @@ namespace Grapevine.Core
         protected internal HttpContext(HttpListenerContext httpListenerContext, IRestServer server)
         {
             Advanced = httpListenerContext;
+            Response = new HttpResponse(httpListenerContext.Response);
+            Request = new HttpRequest(httpListenerContext.Request);
             Server = server;
         }
     }

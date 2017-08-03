@@ -40,15 +40,31 @@ namespace Grapevine.Core
 
         public HttpListenerResponse Advanced { get; protected internal set; }
 
-        public Encoding ContentEncoding { get; set; }
+        public Encoding ContentEncoding
+        {
+            get { return Advanced.ContentEncoding; }
+            set { Advanced.ContentEncoding = value; }
+        }
 
-        public ContentType ContentType { get; set; }
+        public ContentType ContentType
+        {
+            get { return ContentTypes.FromString(Advanced.ContentType); }
+            set { Advanced.ContentType = value.Value(); }
+        }
 
-        public NameValueCollection Headers { get; set; }
+        public NameValueCollection Headers
+        {
+            get { return Advanced.Headers; }
+            set { Advanced.Headers = (WebHeaderCollection) value; }
+        }
 
         public bool ResponseSent { get; set; }
 
-        public HttpStatusCode StatusCode { get; set; }
+        public HttpStatusCode StatusCode
+        {
+            get { return (HttpStatusCode) Advanced.StatusCode; }
+            set { Advanced.StatusCode = (int) value; }
+        }
 
         public string StatusDescription => Advanced.StatusDescription;
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.IO;
 using System.Net;
 using Grapevine.Common;
 
@@ -50,23 +51,23 @@ namespace Grapevine.Core
 
     public class HttpRequest : IHttpRequest
     {
-        public HttpListenerRequest Advanced { get; protected internal set; }
+        public HttpListenerRequest Advanced { get; }
 
-        public ContentType ContentType { get; protected internal set; }
+        public ContentType ContentType { get; }
 
-        public NameValueCollection Headers { get; protected internal set; }
+        public NameValueCollection Headers => Advanced.Headers;
 
-        public HttpMethod HttpMethod { get; protected internal set; }
+        public HttpMethod HttpMethod { get; }
 
-        public string Id { get; protected internal set; }
+        public string Id { get; }
 
-        public string Name { get; protected internal set; }
+        public string Name { get; }
 
-        public string PathInfo { get; protected internal set; }
+        public string PathInfo { get; }
 
         public Dictionary<string, string> PathParameters { get; set; }
 
-        public NameValueCollection QueryString { get; protected internal set; }
+        public NameValueCollection QueryString => Advanced.QueryString;
 
         protected internal HttpRequest(HttpListenerRequest request)
         {
@@ -77,6 +78,7 @@ namespace Grapevine.Core
             HttpMethod = HttpMethods.FromString(Advanced.HttpMethod);
 
             Name = $"{HttpMethod} {PathInfo}";
+            Id = Path.GetRandomFileName().Replace(".", string.Empty).Substring(0,10);
         }
     }
 }
