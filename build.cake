@@ -9,6 +9,7 @@ Task("default")
     .IsDependentOn("cover");
 
 Task("cover")
+    .IsDependentOn("clean-solution")
     .IsDependentOn("compile-debug")
     .IsDependentOn("unit-test-coverage-report");
 

@@ -10,7 +10,7 @@ private OpenCoverSettings ocSettings = new OpenCoverSettings().WithFilter("+[*]*
 Task("unit-test-coverage")
 .Does(() =>
 {
-    System.Console.WriteLine(ReportPaths.Unit.OutputFile);
+    Information("Writing Output To: {0}", ReportPaths.Unit.OutputFile);
     OpenCover(tool => { tool.XUnit2("./**/Grapevine.Tests.Unit.dll", xuSettings); },
         new FilePath(ReportPaths.Unit.OutputFile),
         ocSettings);

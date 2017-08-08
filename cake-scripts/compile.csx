@@ -1,7 +1,6 @@
 using System;
 
 var slnPath = "./src/Grapevine.sln";
-var toolVersion = MSBuildToolVersion.NET46;
 var buildVersion = "version_num";
 
 Task("compile-debug")
@@ -11,8 +10,7 @@ Task("compile-debug")
             settings.SetConfiguration("Debug")
                 .SetVerbosity(Verbosity.Minimal)
                 .SetMaxCpuCount(1)
-                .SetNodeReuse(false)
-                .UseToolVersion(toolVersion);
+                .SetNodeReuse(false);
         });
     });
 
@@ -23,8 +21,7 @@ Task("compile-release")
             settings.SetConfiguration("Release")
                 .SetVerbosity(Verbosity.Minimal)
                 .SetMaxCpuCount(1)
-                .SetNodeReuse(false)
-                .UseToolVersion(toolVersion);
+                .SetNodeReuse(false);
         });
     });
 
