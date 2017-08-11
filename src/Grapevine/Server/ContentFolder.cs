@@ -74,7 +74,7 @@ namespace Grapevine.Server
 
         public string IndexFileName
         {
-            get { return _indexFileName; }
+            get => _indexFileName;
             set
             {
                 if (string.IsNullOrWhiteSpace(value) || value == _indexFileName) return;
@@ -85,7 +85,7 @@ namespace Grapevine.Server
 
         public string Prefix
         {
-            get { return _prefix; }
+            get => _prefix;
             set
             {
                 var prefix = string.IsNullOrWhiteSpace(value) ? string.Empty : $"/{value.Trim().TrimStart('/').TrimEnd('/').Trim()}";
@@ -98,11 +98,7 @@ namespace Grapevine.Server
 
         public string FolderPath
         {
-            get
-            {
-                return _path;
-            }
-
+            get => _path;
             protected internal set
             {
                 var path = Path.GetFullPath(value);
@@ -113,7 +109,7 @@ namespace Grapevine.Server
 
         public FileSystemWatcher Watcher
         {
-            get { return _watcher; }
+            get => _watcher;
             protected internal set
             {
                 if (value == null || value == _watcher) return;
