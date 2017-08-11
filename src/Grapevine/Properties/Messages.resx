@@ -189,6 +189,10 @@
     <value>T must be an enumerated type.</value>
     <comment>The generic type T must by an enumerated type.</comment>
   </data>
+  <data name="PortIsInUse" xml:space="preserve">
+    <value>Grapevine is unable to start because another process is already running on port {0}.</value>
+    <comment>The specified port is already in use.</comment>
+  </data>
   <data name="PortNumberNotInRange" xml:space="preserve">
     <value>must be an integer between {0} and {1}.</value>
     <comment>The port numbers specify exceed the range of available ports.</comment>
@@ -197,13 +201,17 @@
     <value>Cannot start server until server has finished stopping.</value>
     <comment>Cannot start server until server has finished stopping.</comment>
   </data>
+  <data name="RestServerCanNotStopWhileStarting" xml:space="preserve">
+    <value>Cannot stop server until server has finished starting</value>
+    <comment>Cannot stop server until server has finished starting</comment>
+  </data>
   <data name="RouteGenerated" xml:space="preserve">
     <value>Generated route {0}.</value>
     <comment>The specified route was generated.</comment>
   </data>
   <data name="RouteInvoked" xml:space="preserve">
     <value>{0}/{1} {2}</value>
-    <comment>The specifed sequence of the specified number of routes with the specified name was executed.</comment>
+    <comment>The specifed sequence of the specified number of routes with the specified name was invoked.</comment>
   </data>
   <data name="RouteNotFound" xml:space="preserve">
     <value>Route Not Found For {0} {1}.</value>
@@ -220,6 +228,10 @@
   <data name="ScanningSpecifiedMethod" xml:space="preserve">
     <value>Scanning method {0} for routes.</value>
     <comment>The specified method is being scanned for routes.</comment>
+  </data>
+  <data name="ServerListening" xml:space="preserve">
+    <value>Listening: {0}</value>
+    <comment>The server is listening on the specified prefix.</comment>
   </data>
   <data name="ServerStateException" xml:space="preserve">
     <value>Host, Port and UseHttps properties cannot be modified while the server is running.</value>
@@ -247,10 +259,19 @@
   </data>
   <data name="TotalRoutesInvoked" xml:space="preserve">
     <value>{0} of {1} routes invoked</value>
+    <comment>The specified number of routes out of the specified total number of routes were invoked.</comment>
   </data>
   <data name="UnableToStartRestServerOfType" xml:space="preserve">
     <value>An error occured when trying to start the {0}</value>
     <comment>Unable to start the rest server of the specified type.</comment>
+  </data>
+  <data name="UnableToStopRestServerOfType" xml:space="preserve">
+    <value>An error occured while trying to stop {0}</value>
+    <comment>Unable to stop the rest server of the specified type.</comment>
+  </data>
+  <data name="UnexpectedHttpListenerException" xml:space="preserve">
+    <value>Unexpected HttpListenerException Occured (IsStopping:{0}, NativeErrorCode:{1})</value>
+    <comment>An unexpected error occured, specifies whether the server is trying to stop and what the native error code is.</comment>
   </data>
   <data name="UnknownListenerException" xml:space="preserve">
     <value>An error occured while attempting to respond to the request</value>

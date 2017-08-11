@@ -7,6 +7,7 @@ using Grapevine.Common;
 using Grapevine.Core;
 using Grapevine.Core.Exceptions;
 using Grapevine.Core.Logging;
+using Grapevine.Properties;
 using HttpListener = Grapevine.Core.HttpListener;
 
 namespace Grapevine.Server
@@ -132,7 +133,7 @@ namespace Grapevine.Server
         }
 
         public string Host {
-            get { return UriBuilder.Host; }
+            get => UriBuilder.Host;
             set
             {
                 if (IsListening) throw new ServerStateException();
@@ -146,7 +147,7 @@ namespace Grapevine.Server
 
         public string Port
         {
-            get { return UriBuilder.Port.ToString(); }
+            get => UriBuilder.Port.ToString();
             set
             {
                 if (IsListening) throw new ServerStateException();
@@ -158,7 +159,7 @@ namespace Grapevine.Server
 
         public bool UseHttps
         {
-            get { return UriBuilder.Scheme == UriScheme.Https.ToScheme(); }
+            get => UriBuilder.Scheme == UriScheme.Https.ToScheme();
             set
             {
                 if (IsListening) throw new ServerStateException();
@@ -175,7 +176,7 @@ namespace Grapevine.Server
         public void Start()
         {
             if (IsListening || IsStarting) return;
-            if (IsStopping) throw new UnableToStartHostException("Cannot start server until server has finished stopping");
+            if (IsStopping) throw new UnableToStartHostException(Messages.RestServerCanNotStartWhileStopping);
             IsStarting = true;
 
             try
@@ -189,13 +190,13 @@ namespace Grapevine.Server
 
                 if (!TestingMode) Listening.Start();
 
-                Logger.Trace($"Listening: {ListenerPrefix}");
+                Logger.Trace(string.Format(Messages.ServerListening, ListenerPrefix));
                 if (IsListening) OnAfterStarting();
             }
             catch (HttpListenerException hle)
             {
                 var msg = hle.ErrorCode == 32
-                    ? $"Grapevine is unable to start because another process is already running on port {Port}"
+                    ? string.Format(Messages.PortIsInUse, Port)
                     : hle.Message;
 
                 throw new UnableToStartHostException(msg, hle);
@@ -213,7 +214,7 @@ namespace Grapevine.Server
         public void Stop()
         {
             if (!IsListening || IsStopping) return;
-            if (IsStarting) throw new UnableToStopHostException("Cannot stop server until server has finished starting");
+            if (IsStarting) throw new UnableToStopHostException(Messages.RestServerCanNotStopWhileStarting);
             IsStopping = true;
 
             try
@@ -230,7 +231,7 @@ namespace Grapevine.Server
             catch(Exception e)
             {
                 // Catch the HTTPListenerException port-reuse error and throw a better message
-                throw new UnableToStopHostException($"An error occured while trying to stop {GetType().FullName}", e);
+                throw new UnableToStopHostException(GetType(), e);
             }
             finally
             {
@@ -266,7 +267,7 @@ namespace Grapevine.Server
                 /* Ignores exceptions thrown by incomplete async methods listening for incoming requests */
                 if (IsStopping && hle.NativeErrorCode == 995) return;
 
-                Logger.Debug($"Unexpected HttpListenerException Occured (IsStopping:{IsStopping}, NativeErrorCode:{hle.NativeErrorCode})", hle);
+                Logger.Debug(string.Format(Messages.UnexpectedHttpListenerException, IsStopping, hle.NativeErrorCode), hle);
             }
             catch (Exception e)
             {

@@ -223,6 +223,15 @@ namespace Grapevine.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Grapevine is unable to start because another process is already running on port {0}..
+        /// </summary>
+        internal static string PortIsInUse {
+            get {
+                return ResourceManager.GetString("PortIsInUse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to must be an integer between {0} and {1}..
         /// </summary>
         internal static string PortNumberNotInRange {
@@ -237,6 +246,15 @@ namespace Grapevine.Properties {
         internal static string RestServerCanNotStartWhileStopping {
             get {
                 return ResourceManager.GetString("RestServerCanNotStartWhileStopping", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot stop server until server has finished starting.
+        /// </summary>
+        internal static string RestServerCanNotStopWhileStarting {
+            get {
+                return ResourceManager.GetString("RestServerCanNotStopWhileStarting", resourceCulture);
             }
         }
         
@@ -291,6 +309,15 @@ namespace Grapevine.Properties {
         internal static string ScanningSpecifiedMethod {
             get {
                 return ResourceManager.GetString("ScanningSpecifiedMethod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Listening: {0}.
+        /// </summary>
+        internal static string ServerListening {
+            get {
+                return ResourceManager.GetString("ServerListening", resourceCulture);
             }
         }
         
@@ -363,6 +390,24 @@ namespace Grapevine.Properties {
         internal static string UnableToStartRestServerOfType {
             get {
                 return ResourceManager.GetString("UnableToStartRestServerOfType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occured while trying to stop {0}.
+        /// </summary>
+        internal static string UnableToStopRestServerOfType {
+            get {
+                return ResourceManager.GetString("UnableToStopRestServerOfType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unexpected HttpListenerException Occured (IsStopping:{0}, NativeErrorCode:{1}).
+        /// </summary>
+        internal static string UnexpectedHttpListenerException {
+            get {
+                return ResourceManager.GetString("UnexpectedHttpListenerException", resourceCulture);
             }
         }
         

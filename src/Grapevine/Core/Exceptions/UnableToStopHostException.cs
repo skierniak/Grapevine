@@ -1,4 +1,5 @@
 ﻿using System;
+using Grapevine.Properties;
 
 namespace Grapevine.Core.Exceptions
 {
@@ -10,5 +11,8 @@ namespace Grapevine.Core.Exceptions
         public UnableToStopHostException(string message, params object[] values) : base(string.Format(message, values)) { }
 
         public UnableToStopHostException(Exception inner, string message, params object[] values) : base(string.Format(message, values), inner) { }
+
+        public UnableToStopHostException(Type type, Exception inner = null) : base(string.Format(Messages.UnableToStopRestServerOfType, type.FullName), inner) { }
+
     }
 }

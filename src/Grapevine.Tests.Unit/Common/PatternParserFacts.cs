@@ -1,5 +1,6 @@
 ﻿using System;
 using Grapevine.Common;
+using Grapevine.Properties;
 using Xunit;
 using Shouldly;
 
@@ -127,7 +128,7 @@ namespace Grapevine.Tests.Unit.Common
                 }
                 catch (Exception e)
                 {
-                    e.Message.EndsWith(pathinfo).ShouldBeTrue();
+                    e.Message.ShouldBe(string.Format(Messages.DuplicateParameterInPattern, pathinfo));
                 }
             }
         }

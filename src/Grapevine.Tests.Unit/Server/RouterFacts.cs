@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Reflection;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using Grapevine.Common;
 using Grapevine.Core;
 using Grapevine.Core.Exceptions;
 using Grapevine.Core.Logging;
+using Grapevine.Properties;
 using Grapevine.Server;
 using Grapevine.Tests.Sample;
 using Grapevine.Tests.Unit.Stubs;
@@ -475,7 +477,7 @@ namespace Grapevine.Tests.Unit.Server
 
                 logger.Logs.ShouldSatisfyAllConditions(
                     () => logger.Logs.Count.ShouldBe(3),
-                    () => logger.Logs[1].Message.ShouldBe(Router.ConnectionAbortedMsg)
+                    () => logger.Logs[1].Message.ShouldBe(Messages.ConnectionAborted)
                 );
             }
 
@@ -493,7 +495,7 @@ namespace Grapevine.Tests.Unit.Server
 
                 logger.Logs.ShouldSatisfyAllConditions(
                     () => logger.Logs.Count.ShouldBe(3),
-                    () => logger.Logs[1].Message.ShouldBe(Router.UnknownListenerExceptionMsg)
+                    () => logger.Logs[1].Message.ShouldBe(Messages.UnknownListenerException)
                 );
             }
         }
