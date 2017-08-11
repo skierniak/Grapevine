@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Reflection;
+using Grapevine.Properties;
 
 namespace Grapevine.Core.Logging
 {
@@ -31,8 +32,7 @@ namespace Grapevine.Core.Logging
             set
             {
                 if (_providerRetrieved)
-                    throw new InvalidOperationException(
-                        "The logging provider must be set before any Grapevine action is taken");
+                    throw new InvalidOperationException(Messages.LoggingProviderLocked);
                 _provider = value;
             }
         }

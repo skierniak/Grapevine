@@ -61,11 +61,29 @@ namespace Grapevine.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Property {0} not found..
+        /// </summary>
+        internal static string DynamicPropertyNotFound {
+            get {
+                return ResourceManager.GetString("DynamicPropertyNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File {0} was not found..
         /// </summary>
         internal static string FileNotFound {
             get {
                 return ResourceManager.GetString("FileNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The logging provider must be set before any Grapevine action is taken..
+        /// </summary>
+        internal static string LoggingProviderLocked {
+            get {
+                return ResourceManager.GetString("LoggingProviderLocked", resourceCulture);
             }
         }
         

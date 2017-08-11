@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using Grapevine.Properties;
 
 namespace Grapevine.Core
 {
@@ -54,6 +55,6 @@ namespace Grapevine.Core
 
     public class DynamicValueNotFoundException : Exception
     {
-        public DynamicValueNotFoundException(string key) : base($"Propery {key} not found") { }
+        public DynamicValueNotFoundException(string key) : base(string.Format(Messages.DynamicPropertyNotFound, key)) { }
     }
 }
