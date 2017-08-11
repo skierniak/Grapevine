@@ -5,6 +5,7 @@ using System.Reflection;
 using Grapevine.Common;
 using Grapevine.Core;
 using Grapevine.Core.Exceptions;
+using Grapevine.Properties;
 
 namespace Grapevine.Server
 {
@@ -53,21 +54,26 @@ namespace Grapevine.Server
             var exceptions = new List<Exception>();
 
             // Can the method be invoked?
-            if (!method.CanBeInvoked()) exceptions.Add(new InvalidRouteMethodException($"{method.Name} cannot be invoked"));
+            if (!method.CanBeInvoked())
+                exceptions.Add(new InvalidRouteMethodException(Messages.MethodCannotBeInvoked, method.Name));
 
             // Does the type have a parameterless constructor?
-            if (method.ReflectedType != null && !method.ReflectedType.HasParameterlessConstructor()) exceptions.Add(new InvalidRouteMethodException($"{method.ReflectedType} does not have a parameterless constructor"));
+            if (method.ReflectedType != null && !method.ReflectedType.HasParameterlessConstructor())
+                exceptions.Add(new InvalidRouteMethodException(Messages.MethodDoesNotHaveParameterlessConstructor,
+                    method.ReflectedType.ToString()));
 
             // Can not have a special name (getters and setters)
-            if (method.IsSpecialName) exceptions.Add(new InvalidRouteMethodException($"{method.Name} may be treated in a special way by some compilers (such as property accessors and operator overloading methods)"));
+            if (method.IsSpecialName) exceptions.Add(new InvalidRouteMethodException(Messages.MethodIsSpecial, method.Name));
 
             var args = method.GetParameters();
 
             // Method must have only one argument
-            if (args.Length != 1) exceptions.Add(new InvalidRouteMethodException($"{method.Name} must accept one and only one argument"));
+            if (args.Length != 1) exceptions.Add(new InvalidRouteMethodException(Messages.MethodAcceptsMultipleArguments, method.Name));
 
             // First argument to method must be of type T
-            if (args.Length > 0 && args[0].ParameterType != typeof(IHttpContext)) exceptions.Add(new InvalidRouteMethodException($"{method.Name}: first argument must be of type {typeof(IHttpContext).Name}"));
+            if (args.Length > 0 && args[0].ParameterType != typeof(IHttpContext))
+                exceptions.Add(new InvalidRouteMethodException(Messages.MethodArgumentMustBeOfType, method.Name, "1",
+                    typeof(IHttpContext).Name));
 
             // Return boolean value
             if (exceptions.Count == 0) return true;
@@ -132,8 +138,10 @@ namespace Grapevine.Server
                 return method.IsRestRouteEligible(throwExceptionWhenFalse);
             if (!throwExceptionWhenFalse) return false;
 
-            var exception = new InvalidRouteMethodException($"{method.Name} does not have the {typeof(RestRoute).Name} attribute");
-            throw new InvalidRouteMethodExceptions(new Exception[] { exception });
+            throw new InvalidRouteMethodExceptions(new Exception[]
+            {
+                new InvalidRouteMethodException(Messages.MethodMissingAttribute, method.Name, typeof(RestRoute).Name)
+            });
         }
     }
 }
