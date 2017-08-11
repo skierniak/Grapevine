@@ -117,6 +117,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CannotConvert" xml:space="preserve">
+    <value>Cannot convert '{0}' to {1}.</value>
+    <comment>Cannot convert the value to the specified type.</comment>
+  </data>
+  <data name="CollectionArgumentIsNull" xml:space="preserve">
+    <value>Missing collection.</value>
+    <comment>The collection argument is missing or null.</comment>
+  </data>
+  <data name="DuplicateParameterInPattern" xml:space="preserve">
+    <value>Repeat parameters in path info expression {0}.</value>
+    <comment>There is a duplicate parameter name in the path info expression.</comment>
+  </data>
   <data name="DynamicPropertyNotFound" xml:space="preserve">
     <value>Property {0} not found.</value>
     <comment>The specified property was not found.</comment>
@@ -124,6 +136,14 @@
   <data name="FileNotFound" xml:space="preserve">
     <value>File {0} was not found.</value>
     <comment>Specified file was not found.</comment>
+  </data>
+  <data name="KeyArgumentIsNull" xml:space="preserve">
+    <value>Missing key.</value>
+    <comment>The key argument is missing or null.</comment>
+  </data>
+  <data name="KeyNotFound" xml:space="preserve">
+    <value>Key {0} not found in collection.</value>
+    <comment>The specified key is not found in the collection.</comment>
   </data>
   <data name="LoggingProviderLocked" xml:space="preserve">
     <value>The logging provider must be set before any Grapevine action is taken.</value>
@@ -156,6 +176,14 @@
   <data name="MissingAppropriateConstructor" xml:space="preserve">
     <value>"{0} does not contain an appropriate constructor. (Constructor must accept {1} arguments: {2}</value>
     <comment>Specified type is missing a constructor that accepts the listed types.</comment>
+  </data>
+  <data name="NotEnumeratedType" xml:space="preserve">
+    <value>T must be an enumerated type.</value>
+    <comment>The generic type T must by an enumerated type.</comment>
+  </data>
+  <data name="PortNumberNotInRange" xml:space="preserve">
+    <value>must be an integer between {0} and {1}.</value>
+    <comment>The port numbers specify exceed the range of available ports.</comment>
   </data>
   <data name="RestServerCanNotStartWhileStopping" xml:space="preserve">
     <value>Cannot start server until server has finished stopping.</value>

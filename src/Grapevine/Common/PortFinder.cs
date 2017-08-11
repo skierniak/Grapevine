@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
+using Grapevine.Properties;
 
 namespace Grapevine.Common
 {
@@ -20,7 +21,7 @@ namespace Grapevine.Common
         /// </summary>
         public static int LastPort { get; } = 65535;
 
-        private static string OutOfRangeMsg { get; } = $"must be an integer between {FirstPort} and {LastPort}.";
+        private static string OutOfRangeMsg { get; } = string.Format(Messages.PortNumberNotInRange, FirstPort, LastPort);
 
         private int _startIndex;
         private int _endIndex;

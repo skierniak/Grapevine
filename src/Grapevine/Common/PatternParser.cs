@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Grapevine.Properties;
 
 namespace Grapevine.Common
 {
@@ -24,7 +25,7 @@ namespace Grapevine.Common
 
             foreach (var val in from Match match in ParseForParams.Matches(pathInfo) select match.Groups[1].Value)
             {
-                if (captured.Contains(val)) throw new ArgumentException($"Repeat parameters in path info expression {pathInfo}");
+                if (captured.Contains(val)) throw new ArgumentException(string.Format(Messages.DuplicateParameterInPattern, pathInfo));
                 captured.Add(val);
             }
 

@@ -55,6 +55,11 @@
     <Compile Include="Core\HttpResponseInterfaceExtensions.cs" />
     <Compile Include="Core\Json\GrapevineJsonManager.cs" />
     <Compile Include="Core\Json\IGrapevineJsonProvider.cs" />
+    <Compile Include="Properties\Messages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Messages.resx</DependentUpon>
+    </Compile>
     <Compile Include="Server\MethodInfoExtensions.cs" />
     <Compile Include="Common\ObjectExtensions.cs" />
     <Compile Include="Common\StreamExtensions.cs" />
@@ -87,7 +92,12 @@
     <Compile Include="Server\Router.cs" />
     <Compile Include="Server\RouteScanner.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Messages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

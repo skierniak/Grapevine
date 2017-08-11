@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Grapevine.Properties;
 
 namespace Grapevine.Common
 {
@@ -29,7 +30,7 @@ namespace Grapevine.Common
 
         public static T FromString<T>(string value) where T : struct, IComparable, IFormattable, IConvertible
         {
-            if (!typeof(T).IsEnum) throw new ArgumentException("T must be an enumerated type");
+            if (!typeof(T).IsEnum) throw new ArgumentException(Messages.NotEnumeratedType);
 
             try
             {

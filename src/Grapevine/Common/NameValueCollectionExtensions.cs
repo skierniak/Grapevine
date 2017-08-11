@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using Grapevine.Properties;
 
 namespace Grapevine.Common
 {
@@ -15,14 +16,14 @@ namespace Grapevine.Common
         /// <returns>object of type &lt;T&gt;</returns>
         public static T GetValue<T>(this NameValueCollection collection, string key)
         {
-            if (collection == null) throw new ArgumentNullException(nameof(collection), "Missing collection");
-            if (key == null) throw new ArgumentNullException(nameof(key), "Missing key");
-            if (collection[key] == null) throw new ArgumentOutOfRangeException(nameof(key), $"Key {key} not found in collection");
+            if (collection == null) throw new ArgumentNullException(nameof(collection), Messages.CollectionArgumentIsNull);
+            if (key == null) throw new ArgumentNullException(nameof(key), Messages.KeyArgumentIsNull);
+            if (collection[key] == null) throw new ArgumentOutOfRangeException(nameof(key), string.Format(Messages.KeyNotFound, key));
 
             var value = collection[key];
             var converter = TypeDescriptor.GetConverter(typeof(T));
 
-            if (!converter.CanConvertFrom(typeof(string))) throw new ArgumentException($"Cannot convert '{value}' to {typeof(T)}");
+            if (!converter.CanConvertFrom(typeof(string))) throw new ArgumentException(string.Format(Messages.CannotConvert, value, typeof(T)));
             return (T)converter.ConvertFrom(value);
         }
 

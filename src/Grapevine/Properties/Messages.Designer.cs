@@ -61,6 +61,33 @@ namespace Grapevine.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot convert &apos;{0}&apos; to {1}..
+        /// </summary>
+        internal static string CannotConvert {
+            get {
+                return ResourceManager.GetString("CannotConvert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Missing collection..
+        /// </summary>
+        internal static string CollectionArgumentIsNull {
+            get {
+                return ResourceManager.GetString("CollectionArgumentIsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Repeat parameters in path info expression {0}..
+        /// </summary>
+        internal static string DuplicateParameterInPattern {
+            get {
+                return ResourceManager.GetString("DuplicateParameterInPattern", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Property {0} not found..
         /// </summary>
         internal static string DynamicPropertyNotFound {
@@ -75,6 +102,24 @@ namespace Grapevine.Properties {
         internal static string FileNotFound {
             get {
                 return ResourceManager.GetString("FileNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Missing key..
+        /// </summary>
+        internal static string KeyArgumentIsNull {
+            get {
+                return ResourceManager.GetString("KeyArgumentIsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Key {0} not found in collection..
+        /// </summary>
+        internal static string KeyNotFound {
+            get {
+                return ResourceManager.GetString("KeyNotFound", resourceCulture);
             }
         }
         
@@ -147,6 +192,24 @@ namespace Grapevine.Properties {
         internal static string MissingAppropriateConstructor {
             get {
                 return ResourceManager.GetString("MissingAppropriateConstructor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to T must be an enumerated type..
+        /// </summary>
+        internal static string NotEnumeratedType {
+            get {
+                return ResourceManager.GetString("NotEnumeratedType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to must be an integer between {0} and {1}..
+        /// </summary>
+        internal static string PortNumberNotInRange {
+            get {
+                return ResourceManager.GetString("PortNumberNotInRange", resourceCulture);
             }
         }
         
