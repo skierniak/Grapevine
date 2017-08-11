@@ -98,9 +98,7 @@ namespace Grapevine.Server
 
         public Route(Action<IHttpContext> action, HttpMethod httpMethod, string pathInfo) : this(httpMethod, pathInfo)
         {
-            if (action == null) throw new ArgumentNullException(nameof(action));
-
-            Delegate = action;
+            Delegate = action ?? throw new ArgumentNullException(nameof(action));
             Name = $"{Delegate.Method.ReflectedType}.{Delegate.Method.Name}";
             Description = $"{HttpMethod} {PathInfo} > {Name}";
         }

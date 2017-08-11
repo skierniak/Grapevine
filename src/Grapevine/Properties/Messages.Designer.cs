@@ -79,6 +79,15 @@ namespace Grapevine.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Connection aborted by client..
+        /// </summary>
+        internal static string ConnectionAborted {
+            get {
+                return ResourceManager.GetString("ConnectionAborted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Repeat parameters in path info expression {0}..
         /// </summary>
         internal static string DuplicateParameterInPattern {
@@ -129,6 +138,15 @@ namespace Grapevine.Properties {
         internal static string LoggingProviderLocked {
             get {
                 return ResourceManager.GetString("LoggingProviderLocked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} has {1} matching routes.
+        /// </summary>
+        internal static string MatchingRoutes {
+            get {
+                return ResourceManager.GetString("MatchingRoutes", resourceCulture);
             }
         }
         
@@ -232,6 +250,15 @@ namespace Grapevine.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0}/{1} {2}.
+        /// </summary>
+        internal static string RouteInvoked {
+            get {
+                return ResourceManager.GetString("RouteInvoked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Route Not Found For {0} {1}..
         /// </summary>
         internal static string RouteNotFound {
@@ -322,11 +349,29 @@ namespace Grapevine.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} of {1} routes invoked.
+        /// </summary>
+        internal static string TotalRoutesInvoked {
+            get {
+                return ResourceManager.GetString("TotalRoutesInvoked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An error occured when trying to start the {0}.
         /// </summary>
         internal static string UnableToStartRestServerOfType {
             get {
                 return ResourceManager.GetString("UnableToStartRestServerOfType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occured while attempting to respond to the request.
+        /// </summary>
+        internal static string UnknownListenerException {
+            get {
+                return ResourceManager.GetString("UnknownListenerException", resourceCulture);
             }
         }
     }

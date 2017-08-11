@@ -125,6 +125,10 @@
     <value>Missing collection.</value>
     <comment>The collection argument is missing or null.</comment>
   </data>
+  <data name="ConnectionAborted" xml:space="preserve">
+    <value>Connection aborted by client.</value>
+    <comment>The connection was aborted by the client.</comment>
+  </data>
   <data name="DuplicateParameterInPattern" xml:space="preserve">
     <value>Repeat parameters in path info expression {0}.</value>
     <comment>There is a duplicate parameter name in the path info expression.</comment>
@@ -148,6 +152,10 @@
   <data name="LoggingProviderLocked" xml:space="preserve">
     <value>The logging provider must be set before any Grapevine action is taken.</value>
     <comment>The logging provider must be set before any Grapevine action is taken.</comment>
+  </data>
+  <data name="MatchingRoutes" xml:space="preserve">
+    <value>{0} has {1} matching routes</value>
+    <comment>The specified route has the specified number of matching routes.</comment>
   </data>
   <data name="MethodAcceptsMultipleArguments" xml:space="preserve">
     <value>{0}: must accept one and only one argument.</value>
@@ -193,6 +201,10 @@
     <value>Generated route {0}.</value>
     <comment>The specified route was generated.</comment>
   </data>
+  <data name="RouteInvoked" xml:space="preserve">
+    <value>{0}/{1} {2}</value>
+    <comment>The specifed sequence of the specified number of routes with the specified name was executed.</comment>
+  </data>
   <data name="RouteNotFound" xml:space="preserve">
     <value>Route Not Found For {0} {1}.</value>
     <comment>Specified route was not found.</comment>
@@ -233,8 +245,15 @@
     <value>Found {0} routes for method {1}.</value>
     <comment>The specified number of routes were identified for the specified method.</comment>
   </data>
+  <data name="TotalRoutesInvoked" xml:space="preserve">
+    <value>{0} of {1} routes invoked</value>
+  </data>
   <data name="UnableToStartRestServerOfType" xml:space="preserve">
     <value>An error occured when trying to start the {0}</value>
     <comment>Unable to start the rest server of the specified type.</comment>
+  </data>
+  <data name="UnknownListenerException" xml:space="preserve">
+    <value>An error occured while attempting to respond to the request</value>
+    <comment>An unknown error occured while attempting to respond to the request.</comment>
   </data>
 </root>

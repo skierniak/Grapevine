@@ -5,6 +5,7 @@ using System.Net;
 using Grapevine.Common;
 using Grapevine.Core;
 using Grapevine.Core.Logging;
+using Grapevine.Properties;
 using HttpStatusCode = Grapevine.Common.HttpStatusCode;
 
 namespace Grapevine.Server
@@ -94,9 +95,6 @@ namespace Grapevine.Server
         public Dictionary<HttpStatusCode, Action<IHttpContext>> LocalErrorHandlers =
             new Dictionary<HttpStatusCode, Action<IHttpContext>>();
 
-        public static readonly string ConnectionAbortedMsg = "Connection aborted by client";
-        public static readonly string UnknownListenerExceptionMsg = "An error occured while attempting to respond to the request";
-
         protected internal readonly IList<IRoute> RegisteredRoutes = new List<IRoute>();
 
         public event RoutingEventHandler AfterRouting;
@@ -170,7 +168,7 @@ namespace Grapevine.Server
             var total = routing.Count;
             var counter = 0;
 
-            Logger.Trace($"{context.Request.Name} has {total} matching routes", context.Request.Id);
+            Logger.Trace(string.Format(Messages.MatchingRoutes, context.Request.Name, total), context.Request.Id);
 
             try
             {
@@ -183,20 +181,20 @@ namespace Grapevine.Server
                     counter++;
                     route.Invoke(context);
 
-                    Logger.Trace($"{counter}/{total} {route.Name}", context.Request.Id);
+                    Logger.Trace(string.Format(Messages.RouteInvoked, counter, total, route.Name), context.Request.Id);
                 }
             }
             catch (HttpListenerException e)
             {
                 var msg = e.NativeErrorCode == 64
-                    ? ConnectionAbortedMsg
-                    : UnknownListenerExceptionMsg;
+                    ? Messages.ConnectionAborted
+                    : Messages.UnknownListenerException;
                 Logger.Warn(msg, e, context.Request.Id);
             }
             finally
             {
                 OnAfterRouting(context);
-                Logger.Trace($"{counter} of {total} routes invoked", context.Request.Id);
+                Logger.Trace(string.Format(Messages.TotalRoutesInvoked, counter, total), context.Request.Id);
             }
         }
 
