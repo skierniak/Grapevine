@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Grapevine.Common;
@@ -52,6 +51,12 @@ namespace Grapevine.Server
         /// <returns>bool</returns>
         bool Matches(IHttpContext context);
 
+        /// <summary>
+        /// Collection of headers and patterns for this route to match on
+        /// </summary>
+        /// <param name="header"></param>
+        /// <param name="pattern"></param>
+        /// <returns></returns>
         IRoute MatchOn(string header, Regex pattern);
 
         /// <summary>

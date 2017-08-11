@@ -5,6 +5,7 @@ using System.Reflection;
 using Grapevine.Common;
 using Grapevine.Core.Exceptions;
 using Grapevine.Core.Logging;
+using Grapevine.Properties;
 
 namespace Grapevine.Server
 {
@@ -148,7 +149,7 @@ namespace Grapevine.Server
         public IList<IRoute> Scan(string basePath)
         {
             var routes = new List<IRoute>();
-            _logger.Trace($"Scanning {Assemblies.Count} assemblies for routes.");
+            _logger.Trace(string.Format(Messages.TotalAssembliesScannedForRoutes, Assemblies.Count));
 
             foreach (var assembly in Assemblies)
             {
@@ -157,14 +158,14 @@ namespace Grapevine.Server
                 routes.AddRange(ScanAssembly(assembly, basePath));
             }
 
-            _logger.Trace($"Found {routes.Count} routes in all assemblies");
+            _logger.Trace(string.Format(Messages.TotalRoutesFoundInAllAssemblies, routes.Count));
             return routes;
         }
 
         public IList<IRoute> ScanAssembly(Assembly assembly, string basePath)
         {
             var routes = new List<IRoute>();
-            _logger.Trace($"Scanning assembly {assembly.GetName().Name} for routes.");
+            _logger.Trace(string.Format(Messages.ScanningSpecifiedAssembly, assembly.GetName().Name));
 
             foreach (var type in assembly.GetTypes().Where(t => t.IsRestResource()).OrderBy(t => t.Name))
             {
@@ -173,7 +174,7 @@ namespace Grapevine.Server
                 routes.AddRange(ScanType(type, basePath));
             }
 
-            _logger.Trace($"Found {routes.Count} routes in assembly {assembly.GetName().Name}.");
+            _logger.Trace(string.Format(Messages.TotalRoutesFoundInAssembly, routes.Count, assembly.GetName().Name));
             return routes;
         }
 
@@ -181,7 +182,7 @@ namespace Grapevine.Server
         {
             var routes = new List<IRoute>();
             if (type.IsAbstract || !type.IsClass) return routes;
-            _logger.Trace($"Scanning class {type.Name} for routes.");
+            _logger.Trace(string.Format(Messages.ScanningSpecifiedClass, type.Name));
 
             var basepath = PathInfoService.GenerateBasePath(basePath, type);
             foreach (var methodInfo in type.GetMethods().Where(m => m.IsRestRoute()).OrderBy(m => m.Name))
@@ -189,25 +190,25 @@ namespace Grapevine.Server
                 routes.AddRange(ScanMethod(methodInfo, basepath));
             }
 
-            _logger.Trace($"Found {routes.Count} routes in class {type.Name}.");
+            _logger.Trace(string.Format(Messages.TotalRoutesFoundInClass, routes.Count, type.Name));
             return routes;
         }
 
         public IList<IRoute> ScanMethod(MethodInfo methodInfo, string basePath)
         {
             var routes = new List<IRoute>();
-            _logger.Trace($"Scanning method {methodInfo.Name} for routes.");
+            _logger.Trace(string.Format(Messages.ScanningSpecifiedMethod, methodInfo.Name));
 
             var basepath = PathInfoService.SanitizeBasePath(basePath);
             foreach (var attribute in methodInfo.GetCustomAttributes(true).Where(a => true).Cast<RestRoute>())
             {
                 var pathinfo = PathInfoService.GeneratePathInfo(attribute.PathInfo, basepath);
                 var route = (IRoute) Activator.CreateInstance(RouteImplementation, methodInfo, attribute.HttpMethod, pathinfo);
-                _logger.Trace($"Generated route {route.Name}");
+                _logger.Trace(string.Format(Messages.RouteGenerated, route.Name));
                 routes.Add(route);
             }
 
-            _logger.Trace($"Found {routes.Count} routes in method {methodInfo.Name}.");
+            _logger.Trace(string.Format(Messages.TotalRoutesFoundInMethod, routes.Count, methodInfo.Name));
             return routes;
         }
     }

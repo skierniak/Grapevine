@@ -189,13 +189,49 @@
     <value>Cannot start server until server has finished stopping.</value>
     <comment>Cannot start server until server has finished stopping.</comment>
   </data>
+  <data name="RouteGenerated" xml:space="preserve">
+    <value>Generated route {0}.</value>
+    <comment>The specified route was generated.</comment>
+  </data>
   <data name="RouteNotFound" xml:space="preserve">
     <value>Route Not Found For {0} {1}.</value>
     <comment>Specified route was not found.</comment>
   </data>
+  <data name="ScanningSpecifiedAssembly" xml:space="preserve">
+    <value>Scanning assembly {0} for routes.</value>
+    <comment>The specified assembly is being scanned for routes.</comment>
+  </data>
+  <data name="ScanningSpecifiedClass" xml:space="preserve">
+    <value>Scanning class {0} for routes.</value>
+    <comment>The specified class is being scanned for rotues.</comment>
+  </data>
+  <data name="ScanningSpecifiedMethod" xml:space="preserve">
+    <value>Scanning method {0} for routes.</value>
+    <comment>The specified method is being scanned for routes.</comment>
+  </data>
   <data name="ServerStateException" xml:space="preserve">
     <value>Host, Port and UseHttps properties cannot be modified while the server is running.</value>
     <comment>Host, Port and UseHttps properties cannot be modified while the server is running.</comment>
+  </data>
+  <data name="TotalAssembliesScannedForRoutes" xml:space="preserve">
+    <value>Scanning {0} assemblies for routes.</value>
+    <comment>Scanning the number of assemblies specified.</comment>
+  </data>
+  <data name="TotalRoutesFoundInAllAssemblies" xml:space="preserve">
+    <value>Found {0} routes in all assemblies</value>
+    <comment>The specified number of routes were identified in all assemblies.</comment>
+  </data>
+  <data name="TotalRoutesFoundInAssembly" xml:space="preserve">
+    <value>Found {0} routes in assembly {1}.</value>
+    <comment>The specified number of routes were identified in the specified assembly.</comment>
+  </data>
+  <data name="TotalRoutesFoundInClass" xml:space="preserve">
+    <value>Found {0} routes in class {1}.</value>
+    <comment>The specified number of routes were identified in the specified class.</comment>
+  </data>
+  <data name="TotalRoutesFoundInMethod" xml:space="preserve">
+    <value>Found {0} routes for method {1}.</value>
+    <comment>The specified number of routes were identified for the specified method.</comment>
   </data>
   <data name="UnableToStartRestServerOfType" xml:space="preserve">
     <value>An error occured when trying to start the {0}</value>

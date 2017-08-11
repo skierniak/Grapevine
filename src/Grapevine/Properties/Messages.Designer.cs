@@ -223,6 +223,15 @@ namespace Grapevine.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Generated route {0}..
+        /// </summary>
+        internal static string RouteGenerated {
+            get {
+                return ResourceManager.GetString("RouteGenerated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Route Not Found For {0} {1}..
         /// </summary>
         internal static string RouteNotFound {
@@ -232,11 +241,83 @@ namespace Grapevine.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Scanning assembly {0} for routes..
+        /// </summary>
+        internal static string ScanningSpecifiedAssembly {
+            get {
+                return ResourceManager.GetString("ScanningSpecifiedAssembly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scanning class {0} for routes..
+        /// </summary>
+        internal static string ScanningSpecifiedClass {
+            get {
+                return ResourceManager.GetString("ScanningSpecifiedClass", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scanning method {0} for routes..
+        /// </summary>
+        internal static string ScanningSpecifiedMethod {
+            get {
+                return ResourceManager.GetString("ScanningSpecifiedMethod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Host, Port and UseHttps properties cannot be modified while the server is running..
         /// </summary>
         internal static string ServerStateException {
             get {
                 return ResourceManager.GetString("ServerStateException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scanning {0} assemblies for routes..
+        /// </summary>
+        internal static string TotalAssembliesScannedForRoutes {
+            get {
+                return ResourceManager.GetString("TotalAssembliesScannedForRoutes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Found {0} routes in all assemblies.
+        /// </summary>
+        internal static string TotalRoutesFoundInAllAssemblies {
+            get {
+                return ResourceManager.GetString("TotalRoutesFoundInAllAssemblies", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Found {0} routes in assembly {1}..
+        /// </summary>
+        internal static string TotalRoutesFoundInAssembly {
+            get {
+                return ResourceManager.GetString("TotalRoutesFoundInAssembly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Found {0} routes in class {1}..
+        /// </summary>
+        internal static string TotalRoutesFoundInClass {
+            get {
+                return ResourceManager.GetString("TotalRoutesFoundInClass", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Found {0} routes for method {1}..
+        /// </summary>
+        internal static string TotalRoutesFoundInMethod {
+            get {
+                return ResourceManager.GetString("TotalRoutesFoundInMethod", resourceCulture);
             }
         }
         
