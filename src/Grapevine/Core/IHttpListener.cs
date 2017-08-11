@@ -80,7 +80,7 @@ namespace Grapevine.Core
             Advanced = new System.Net.HttpListener();
         }
 
-        public HttpListener(IRestServer server) : base()
+        public HttpListener(IRestServer server)
         {
             Server = server;
             Advanced = new System.Net.HttpListener();

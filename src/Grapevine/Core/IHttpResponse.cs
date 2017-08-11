@@ -42,28 +42,28 @@ namespace Grapevine.Core
 
         public Encoding ContentEncoding
         {
-            get { return Advanced.ContentEncoding; }
-            set { Advanced.ContentEncoding = value; }
+            get => Advanced.ContentEncoding;
+            set => Advanced.ContentEncoding = value;
         }
 
         public ContentType ContentType
         {
-            get { return ContentTypes.FromString(Advanced.ContentType); }
-            set { Advanced.ContentType = value.Value(); }
+            get => ContentTypes.FromString(Advanced.ContentType);
+            set => Advanced.ContentType = value.Value();
         }
 
         public NameValueCollection Headers
         {
-            get { return Advanced.Headers; }
-            set { Advanced.Headers = (WebHeaderCollection) value; }
+            get => Advanced.Headers;
+            set => Advanced.Headers = (WebHeaderCollection) value;
         }
 
         public bool ResponseSent { get; set; }
 
         public HttpStatusCode StatusCode
         {
-            get { return (HttpStatusCode) Advanced.StatusCode; }
-            set { Advanced.StatusCode = (int) value; }
+            get => (HttpStatusCode) Advanced.StatusCode;
+            set => Advanced.StatusCode = (int) value;
         }
 
         public string StatusDescription => Advanced.StatusDescription;
