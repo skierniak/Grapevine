@@ -7,8 +7,8 @@ namespace Grapevine.Core.Exceptions
     /// </summary>
     public class UnableToStopHostException : Exception
     {
-        public UnableToStopHostException(string message) : base(message) { }
+        public UnableToStopHostException(string message, params object[] values) : base(string.Format(message, values)) { }
 
-        public UnableToStopHostException(string message, Exception inner) : base(message, inner) { }
+        public UnableToStopHostException(Exception inner, string message, params object[] values) : base(string.Format(message, values), inner) { }
     }
 }

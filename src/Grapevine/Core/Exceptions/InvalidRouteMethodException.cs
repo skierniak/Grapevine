@@ -7,7 +7,7 @@ namespace Grapevine.Core.Exceptions
     /// </summary>
     public class InvalidRouteMethodException : Exception
     {
-        public InvalidRouteMethodException(string message, params string[] values) : base(string.Format(message, values)) { }
+        public InvalidRouteMethodException(string message, params object[] values) : base(string.Format(message, values)) { }
     }
 
     /// <summary>

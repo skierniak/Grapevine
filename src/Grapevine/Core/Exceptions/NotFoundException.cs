@@ -1,5 +1,6 @@
 ﻿using System;
 using Grapevine.Common;
+using Grapevine.Properties;
 
 namespace Grapevine.Core.Exceptions
 {
@@ -8,9 +9,7 @@ namespace Grapevine.Core.Exceptions
     /// </summary>
     public abstract class NotFoundException : Exception
     {
-        protected NotFoundException(string message) : base(message)
-        {
-        }
+        protected NotFoundException(string message) : base(message) { }
     }
 
     /// <summary>
@@ -18,9 +17,7 @@ namespace Grapevine.Core.Exceptions
     /// </summary>
     public class FileNotFoundException : NotFoundException
     {
-        public FileNotFoundException(string pathInfo) : base($"File {pathInfo} was not found")
-        {
-        }
+        public FileNotFoundException(string pathInfo) : base(string.Format(Messages.FileNotFound, pathInfo)) { }
     }
 
     /// <summary>
@@ -28,9 +25,6 @@ namespace Grapevine.Core.Exceptions
     /// </summary>
     public class RouteNotFoundException : NotFoundException
     {
-        public RouteNotFoundException(HttpMethod httpMethod, string pathInfo)
-            : base($"Route Not Found For {httpMethod} {pathInfo}")
-        {
-        }
+        public RouteNotFoundException(HttpMethod httpMethod, string pathInfo) : base(string.Format(Messages.RouteNotFound, httpMethod, pathInfo)) { }
     }
 }

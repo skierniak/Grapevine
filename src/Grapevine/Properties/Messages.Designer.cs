@@ -61,6 +61,15 @@ namespace Grapevine.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File {0} was not found..
+        /// </summary>
+        internal static string FileNotFound {
+            get {
+                return ResourceManager.GetString("FileNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0}: must accept one and only one argument..
         /// </summary>
         internal static string MethodAcceptsMultipleArguments {
@@ -111,6 +120,51 @@ namespace Grapevine.Properties {
         internal static string MethodMissingAttribute {
             get {
                 return ResourceManager.GetString("MethodMissingAttribute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;{0} does not contain an appropriate constructor. (Constructor must accept {1} arguments: {2}.
+        /// </summary>
+        internal static string MissingAppropriateConstructor {
+            get {
+                return ResourceManager.GetString("MissingAppropriateConstructor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot start server until server has finished stopping..
+        /// </summary>
+        internal static string RestServerCanNotStartWhileStopping {
+            get {
+                return ResourceManager.GetString("RestServerCanNotStartWhileStopping", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Route Not Found For {0} {1}..
+        /// </summary>
+        internal static string RouteNotFound {
+            get {
+                return ResourceManager.GetString("RouteNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Host, Port and UseHttps properties cannot be modified while the server is running..
+        /// </summary>
+        internal static string ServerStateException {
+            get {
+                return ResourceManager.GetString("ServerStateException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occured when trying to start the {0}.
+        /// </summary>
+        internal static string UnableToStartRestServerOfType {
+            get {
+                return ResourceManager.GetString("UnableToStartRestServerOfType", resourceCulture);
             }
         }
     }

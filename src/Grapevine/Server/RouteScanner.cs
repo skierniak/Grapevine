@@ -120,7 +120,7 @@ namespace Grapevine.Server
                 if (@params[2].ParameterType != typeof(string)) return false;
 
                 return true;
-            })) throw new MissingConstructorException($"{type.FullName} does not contain an appropriate constructor. (Constructor must accept 3 arguments: ${typeof(MethodInfo).Name}, ${typeof(HttpMethod).Name}, and a string.)");
+            })) throw new MissingConstructorException(type, typeof(MethodInfo), typeof(HttpMethod), typeof(string));
 
             RouteImplementation = type;
         }

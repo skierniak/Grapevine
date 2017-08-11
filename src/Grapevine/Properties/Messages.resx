@@ -117,6 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="FileNotFound" xml:space="preserve">
+    <value>File {0} was not found.</value>
+    <comment>Specified file was not found.</comment>
+  </data>
   <data name="MethodAcceptsMultipleArguments" xml:space="preserve">
     <value>{0}: must accept one and only one argument.</value>
     <comment>The method must accept one and only one argument.</comment>
@@ -140,5 +144,25 @@
   <data name="MethodMissingAttribute" xml:space="preserve">
     <value>{0}: does not have the {1} attribute.</value>
     <comment>The method does not have the specified attribute.</comment>
+  </data>
+  <data name="MissingAppropriateConstructor" xml:space="preserve">
+    <value>"{0} does not contain an appropriate constructor. (Constructor must accept {1} arguments: {2}</value>
+    <comment>Specified type is missing a constructor that accepts the listed types.</comment>
+  </data>
+  <data name="RestServerCanNotStartWhileStopping" xml:space="preserve">
+    <value>Cannot start server until server has finished stopping.</value>
+    <comment>Cannot start server until server has finished stopping.</comment>
+  </data>
+  <data name="RouteNotFound" xml:space="preserve">
+    <value>Route Not Found For {0} {1}.</value>
+    <comment>Specified route was not found.</comment>
+  </data>
+  <data name="ServerStateException" xml:space="preserve">
+    <value>Host, Port and UseHttps properties cannot be modified while the server is running.</value>
+    <comment>Host, Port and UseHttps properties cannot be modified while the server is running.</comment>
+  </data>
+  <data name="UnableToStartRestServerOfType" xml:space="preserve">
+    <value>An error occured when trying to start the {0}</value>
+    <comment>Unable to start the rest server of the specified type.</comment>
   </data>
 </root>

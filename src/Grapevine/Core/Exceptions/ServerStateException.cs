@@ -1,4 +1,5 @@
 ﻿using System;
+using Grapevine.Properties;
 
 namespace Grapevine.Core.Exceptions
 {
@@ -7,6 +8,6 @@ namespace Grapevine.Core.Exceptions
     /// </summary>
     public class ServerStateException : Exception
     {
-        public ServerStateException() : base("Host, Port and UseHttps properties cannot be modified while the server is running.") { }
+        public ServerStateException() : base(Messages.ServerStateException) { }
     }
 }
