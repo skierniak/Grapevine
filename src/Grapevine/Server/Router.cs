@@ -222,7 +222,7 @@ namespace Grapevine.Server
 
             action?.Invoke(context);
 
-            if (action == null || !context.WasRespondedTo)
+            if (!context.WasRespondedTo)
             {
                 context.Response.SendResponse(context.Response.StatusCode);
             }
