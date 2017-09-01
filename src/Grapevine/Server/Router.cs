@@ -95,6 +95,9 @@ namespace Grapevine.Server
         public Dictionary<HttpStatusCode, Action<IHttpContext>> LocalErrorHandlers =
             new Dictionary<HttpStatusCode, Action<IHttpContext>>();
 
+        public static Action<IHttpContext> DefaultErrorHandler { get; set; } =
+            context => context.Response.TrySendResponse(context);
+
         protected internal readonly IList<IRoute> RegisteredRoutes = new List<IRoute>();
 
         public event RoutingEventHandler AfterRouting;
@@ -211,6 +214,8 @@ namespace Grapevine.Server
 
         protected internal void ErrorHandling(IHttpContext context)
         {
+            if (context.WasRespondedTo) return;
+
             if (context.Response.StatusCode == HttpStatusCode.Ok)
                 context.Response.StatusCode = HttpStatusCode.InternalServerError;
 
@@ -218,14 +223,9 @@ namespace Grapevine.Server
                 ? LocalErrorHandlers[context.Response.StatusCode]
                 : GlobalErrorHandlers.ContainsKey(context.Response.StatusCode)
                     ? GlobalErrorHandlers[context.Response.StatusCode]
-                    : null;
+                    : DefaultErrorHandler;
 
             action?.Invoke(context);
-
-            if (!context.WasRespondedTo)
-            {
-                context.Response.SendResponse(context.Response.StatusCode);
-            }
         }
 
         /// <summary>

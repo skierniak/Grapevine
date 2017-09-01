@@ -419,5 +419,14 @@ namespace Grapevine.Properties {
                 return ResourceManager.GetString("UnknownListenerException", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An unrecoverable error occured while responding to the request..
+        /// </summary>
+        internal static string UnrecoverableErrorWhenSendingResponse {
+            get {
+                return ResourceManager.GetString("UnrecoverableErrorWhenSendingResponse", resourceCulture);
+            }
+        }
     }
 }

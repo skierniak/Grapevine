@@ -277,4 +277,8 @@
     <value>An error occured while attempting to respond to the request</value>
     <comment>An unknown error occured while attempting to respond to the request.</comment>
   </data>
+  <data name="UnrecoverableErrorWhenSendingResponse" xml:space="preserve">
+    <value>An unrecoverable error occured while responding to the request.</value>
+    <comment>An unrecoverable error occured while responding to the request. E.g., network connection was lost, etc.</comment>
+  </data>
 </root>

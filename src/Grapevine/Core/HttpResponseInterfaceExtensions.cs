@@ -3,6 +3,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Grapevine.Common;
+using Grapevine.Core.Logging;
+using Grapevine.Properties;
 using HttpStatusCode = Grapevine.Common.HttpStatusCode;
 
 
@@ -10,6 +12,8 @@ namespace Grapevine.Core
 {
     public static class HttpResponseInterfaceExtensions
     {
+        private static readonly GrapevineLogger Logger = GrapevineLogManager.GetCurrentClassLogger();
+
         /// <summary>
         ///Sends a response and closes the response output using the specified status code as the response content.
         /// </summary>
@@ -176,6 +180,23 @@ namespace Grapevine.Core
                 : stream.GetBinaryBytes();
 
             response.SendResponse(buffer);
+        }
+
+        /// <summary>
+        /// Will attempt to send a response to the client and log any exception that occurs in the attempt.
+        /// </summary>
+        /// <param name="response"></param>
+        /// <param name="context"></param>
+        public static void TrySendResponse(this IHttpResponse response, IHttpContext context)
+        {
+            try
+            {
+                context.Response.SendResponse(context.Response.StatusCode);
+            }
+            catch (Exception e)
+            {
+                Logger.Log(GrapevineLogLevel.Warn, context.Request.Id, Messages.UnrecoverableErrorWhenSendingResponse, e);
+            }
         }
     }
 }
