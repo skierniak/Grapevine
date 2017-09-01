@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Grapevine.Core.Json
+﻿namespace Grapevine.Core.Json
 {
     public static class GrapevineJsonManager
     {

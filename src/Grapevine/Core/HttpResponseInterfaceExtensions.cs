@@ -7,7 +7,6 @@ using Grapevine.Core.Logging;
 using Grapevine.Properties;
 using HttpStatusCode = Grapevine.Common.HttpStatusCode;
 
-
 namespace Grapevine.Core
 {
     public static class HttpResponseInterfaceExtensions

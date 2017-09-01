@@ -6,7 +6,6 @@ using Grapevine.Common;
 using Grapevine.Core;
 using Grapevine.Server;
 using NSubstitute;
-using NSubstitute.Core;
 using Shouldly;
 using Xunit;
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using Grapevine.Common;
 using Grapevine.Core;
 using Grapevine.Core.Exceptions;

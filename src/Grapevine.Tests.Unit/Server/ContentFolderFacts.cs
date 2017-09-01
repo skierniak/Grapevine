@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Reflection;
 using System.Threading;
 using Grapevine.Server;
-using Grapevine.Common;
 using Grapevine.Core;
 using NSubstitute;
 using Shouldly;
 using Xunit;
-using FileNotFoundException = Grapevine.Core.Exceptions.FileNotFoundException;
 using HttpStatusCode = Grapevine.Common.HttpStatusCode;
 
 namespace Grapevine.Tests.Unit.Server
