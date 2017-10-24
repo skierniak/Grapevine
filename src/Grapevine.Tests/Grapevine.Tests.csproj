@@ -3,6 +3,7 @@
   <PropertyGroup>
     <!-- Mark the project as being a test project -->
     <SonarQubeTestProject>true</SonarQubeTestProject>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -12,7 +13,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Grapevine.Tests</RootNamespace>
     <AssemblyName>Grapevine.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -32,6 +33,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -40,6 +42,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -117,11 +120,11 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Grapevine.Tests.Assembly\Grapevine.Tests.Assembly.csproj">
-      <Project>{57CCC133-CF53-4D0C-9452-C661E86A5216}</Project>
+      <Project>{57ccc133-cf53-4d0c-9452-c661e86a5216}</Project>
       <Name>Grapevine.Tests.Assembly</Name>
     </ProjectReference>
     <ProjectReference Include="..\Grapevine\Grapevine.csproj">
-      <Project>{C79E6853-F7A0-426F-883C-169651123256}</Project>
+      <Project>{c79e6853-f7a0-426f-883c-169651123256}</Project>
       <Name>Grapevine</Name>
     </ProjectReference>
   </ItemGroup>
